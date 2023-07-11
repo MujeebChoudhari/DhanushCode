@@ -1,0 +1,93 @@
+_schema-version: "3.2"
+ID: CreBudgetApprove
+description: Fiori elements app
+version: 0.0.1
+modules:
+- name: CreBudgetApprove-dest-content
+  type: com.sap.application.content
+  requires:
+  - name: CreBudgetApprove-destination-service
+    parameters:
+      content-target: true
+  - name: CreBudgetApprove-repo-host
+    parameters:
+      service-key:
+        name: CreBudgetApprove-repo-host-key
+  - name: CreBudgetApprove-uaa
+    parameters:
+      service-key:
+        name: CreBudgetApprove-uaa-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: CreBudgetApprove_repo_host
+          ServiceInstanceName: CreBudgetApprove-html5-srv
+          ServiceKeyName: CreBudgetApprove-repo-host-key
+          sap.cloud.service: CreBudgetApprove
+        - Authentication: OAuth2UserTokenExchange
+          Name: CreBudgetApprove_uaa
+          ServiceInstanceName: CreBudgetApprove-xsuaa-srv
+          ServiceKeyName: CreBudgetApprove-uaa-key
+          sap.cloud.service: CreBudgetApprove
+        existing_destinations_policy: update
+  build-parameters:
+    no-source: true
+- name: CreBudgetApprove-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: CreBudgetApprove-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - gbwfcerbudgetapprove.zip
+      name: gbwfcerbudgetapprove
+      target-path: resources/
+- name: gbwfcerbudgetapprove
+  type: html5
+  path: cer.budget.approve
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: CreBudgetApprove-uaa
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: CreBudgetApprove-xsuaa-srv
+    service-plan: application
+- name: CreBudgetApprove-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: CreBudgetApprove-destination-service
+    service-plan: lite
+- name: CreBudgetApprove-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: CreBudgetApprove-html5-srv
+    service-plan: app-host
+parameters:
+  deploy_mode: html5-repo

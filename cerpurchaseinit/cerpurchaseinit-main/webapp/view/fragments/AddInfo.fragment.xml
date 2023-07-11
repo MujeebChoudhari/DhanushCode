@@ -1,0 +1,27 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form">
+	<Popover
+		id="addinfoFragment"
+		class="sapUiContentPadding"
+		placement="Top" showHeader="false">
+		<!--<footer>-->
+		<!--	<Toolbar>-->
+		<!--		<ToolbarSpacer/>-->
+		<!--		<Button-->
+		<!--			id="closeFragmentCAD"-->
+		<!--			text="Close"-->
+		<!--			press="onCloseInfoCAD" />-->
+		<!--	</Toolbar>-->
+		<!--</footer>-->
+		<l:VerticalLayout
+			class="sapUiContentPadding"
+			width="100%">
+			<l:content>
+				<Label design="Bold" text="Please select your pre-approved budget request to accelerate the purchase request approval process"/>
+			</l:content>
+		</l:VerticalLayout>
+	</Popover>
+</core:FragmentDefinition>

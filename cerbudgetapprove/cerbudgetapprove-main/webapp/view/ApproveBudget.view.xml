@@ -1,0 +1,406 @@
+<mvc:View controllerName="gb.wf.cer.budget.approve.controller.ApproveBudget" displayBlock="true" xmlns:core="sap.ui.core"
+	xmlns:form="sap.ui.layout.form" xmlns:l="sap.ui.layout" xmlns:m="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:t="sap.ui.table">
+	<ObjectPageLayout id="ObjectPageLayout" showTitleInHeaderContent="true" alwaysShowContentHeader="false" preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true" upperCaseAnchorBar="false">
+		<headerTitle>
+			<ObjectPageDynamicHeaderTitle id="dynpage">
+				<expandedHeading>
+					<m:Title id="budapp" text="Budget Approval" wrapping="true" class="sapUiSmallMarginEnd"/>
+				</expandedHeading>
+				<snappedHeading>
+					<m:Title id="budapptext" text="Budget Approval" wrapping="true" class="sapUiSmallMarginEnd"/>
+					<!--
+						<m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
+							<m:FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
+								<f:Avatar src="https://sapui5.hana.ondemand.com/{products>ProductPicUrl}" displaySize="S" displayShape="Square" class="sapUiTinyMarginEnd"/>
+								<m:Title text="{/task/Title}" wrapping="true"/>
+							</m:FlexBox>
+						</m:FlexBox>
+						-->
+				</snappedHeading>
+			</ObjectPageDynamicHeaderTitle>
+		</headerTitle>
+<!--		<headerContent>
+			<m:FlexBox renderType="Bare" wrap="Wrap" fitContainer="true" justifyContent="SpaceBetween">
+				<m:VBox renderType="Bare">
+					<m:ObjectAttribute title="{i18n>createdOn}" text="{/task/CreatedOn}"/>
+					<m:ObjectAttribute title="{i18n>description}" text="Jörg Zude"/>
+				</m:VBox>
+				<m:VBox renderType="Bare">
+					<m:ObjectStatus text="{/task/Status}" state="None"/>
+					<m:ObjectStatus text="{/task/Priority}" state="Success"/>
+				</m:VBox>
+			</m:FlexBox>
+		</headerContent>
+-->	
+<!--{=( (${ctx>/isForwarding} === undefined  || ${ctx>/isForwarding} === true) &amp;&amp; (${ctx>/isForwardingToRequester} ===undefined || ${ctx>/isForwardingToRequester} ===false"))-->
+		<sections>
+			<ObjectPageSection id="rq" title="Request" 
+			visible="{=((${ctx>/isForwarding}===undefined || ${ctx>/isForwarding}===false) || ((${ctx>/isForwarding}!==undefined || ${ctx>/isForwarding}===true) &amp;&amp; (${ctx>/isForwardingToRequester}===undefined || ${ctx>/isForwardingToRequester}===false)))}">
+				<subSections>
+					<ObjectPageSubSection id="subrq">
+						<form:SimpleForm id="rqform" editable="false" layout="ResponsiveGridLayout" width="100%">
+							<m:Label id="sht" text="Title" required="false"/>
+							<m:Text id="shttext" text="{ctx>/ShortText}"/>
+							<m:Label id="created" text="Created On"/>
+							<m:Text id="createdtext" text="{ctx>/creationDate}"/>
+							<m:Label id="reqstd" text="A budget approval was requested by"/>
+							<m:Text id="reqstdtext" text="{ctx>/requesterFirstName} {ctx>/requesterSecondName}"/>
+							<m:Label id="reqcuryear" text="Requested amount current year"/>
+							<m:Text id="reqcurtext" text="{
+												path: 'ctx>/requestedBudgetCurrentYear',
+												formatter: '.formatter.In_en_US_WithCurrency'
+											} {ctx>/currencyCode}"/>
+						    <!--<m:Text id="reqcurtext" text="{ctx>/requestedBudgetCurrentYear}.00 {ctx>/currencyCode}"/>-->
+						<!--	<m:Input value="{ctx>/requestedBudgetCurrentYear} {ctx>/currencyCode}"/> -->				
+							<m:Label id="reqcurnext" text="Requested amount next year"/>
+							<m:Text id="reqnext" text="{
+												path: 'ctx>/requestdBudgetNextYear',
+												formatter: '.formatter.In_en_US_WithCurrency'
+											} {ctx>/currencyCode}"/>
+						<!--	<m:Text id="reqnext" text="{ctx>/requestdBudgetNextYear}.00 {ctx>/currencyCode}"/>-->
+							<m:Label id="intord" text="Internal order"/>
+							<m:Text id="intordtext" text="{ctx>/internalOrder} - {ctx>/internalOrderDisplayName}"/>
+							<m:Label id="cst" text="Cost Center"/>
+							<m:Text id="csttext" text="{ctx>/costCenter} - {ctx>/costCenterDisplayName}"/>
+							<m:Label id="lgl" text="Legal entity"/>
+							<m:Text id="lgltext" text="{ctx>/legalEntity} - {ctx>/legalEntityDisplayName}"/>
+							<m:Label id="typ" text="Type"/>
+							<m:Text id="typsel" text="{ctx>/typeDisplayText}"/>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection id="req" title="Request" visible="{= (${ctx>/isForwarding} !==undefined &amp;&amp;  ${ctx>/isForwarding} === true &amp;&amp; ${ctx>/isForwardingToRequester} !==undefined  &amp;&amp;  ${ctx>/isForwardingToRequester} ===true)}">
+				<subSections> 
+					<ObjectPageSubSection id="subreq" >
+						<form:SimpleForm id="noneditable" editable="false" layout="ResponsiveGridLayout" width="100%">
+							<m:Label id="edit" text="Enable edit mode"/>
+							<m:Button id="btnEdit" text="Edit" width="15%" press="onPressedEdit"/>
+							<m:Label id="shorttextlabel" text="Title" required="false"/>
+							<m:Input id="shorttext" value="{ctx>/ShortText}" enabled="{= (${lcl>/isEditMode} ===true)}" visible="true"/>
+							<m:Label id="createdon" text="Created On"/>
+							<m:Text id="createddate" text="{ctx>/creationDate}"/>
+							<m:Label id="budgetapproval" text="A budget approval was requested by"/>
+							<m:Text id="reqfname" text="{ctx>/requesterFirstName} {ctx>/requesterSecondName}"/>
+							<m:Label id="legal" text="Legal entity" required="true" />
+							<m:Select
+								id="legalEntityComboBoxWF"
+								enabled="{lcl>/isEditMode}"
+								selectedKey="{ctx>/legalEntity}"
+								forceSelection="false"
+								showSecondaryValues= "true"
+								items="{
+									path: 'test>/LegalEntity',
+									sorter: {path: 'CompanyCodeName'},
+									length: '100000'
+								}"
+								change="onSelectLegalEntity">
+								<core:ListItem id="companycodelist" key="{test>CompanyCode}" text="{test>CompanyCodeName}" additionalText="{test>CompanyCode}"/>
+							</m:Select>
+							<m:Label id="costlabeldisplay" text="Cost Center" required="true" visible="{= (${lcl>/isEditMode} !==true)}"/>
+							<m:Input id="costdisplay" value="{ctx>/costCenterDisplayName}" visible="{= (${lcl>/isEditMode} !==true)}" enabled="false"/>
+							<m:Label id="costlabel" text="Cost Center" required="true"/>
+							<m:Select
+								visible="{= (${lcl>/isEditMode} ===true)}"
+								id="costCenterComboBoxwf"
+								enabled="{lcl>/isEditMode}"
+								selectedKey="{ctx>/costCenter}"
+								showSecondaryValues= "true"
+								forceSelection="false"
+								items="{
+									path: 'test>/LegalEntity(\'DE02\')/to_CostCenter',
+									length: '100000'
+								}"
+								change="onSelectCostCenter">
+								<core:ListItem id="costlist" key="{test>CostCenter}" text="{test>CostCenterName}" additionalText="{test>CostCenter}"/>
+							</m:Select>
+							<m:Label id="type" text="Type" required="true"/>
+							<m:RadioButtonGroup select="onTypeChange" id="typeRadioButton" columns="2" editable="{lcl>/isEditMode}" selectedIndex="0">
+								<m:buttons>
+									<m:RadioButton id="OC" text="OPEX" selected="true"/>
+									<m:RadioButton id="IV" text="CAPEX"/>
+								</m:buttons>
+							</m:RadioButtonGroup>
+							
+							<m:Label id="internalorderlabeldisplay" text="Internal Order" required="true" visible="{= (${lcl>/isEditMode} !==true)}"/>
+							<m:Input id="internalorderdisplay" value="{ctx>/internalOrderDisplayName}" visible="{= (${lcl>/isEditMode} !==true)}" enabled="false"/>
+							
+							<m:Label id="internalorderlabel" text="Internal Order" required="true"/>
+							<m:Input
+								id="internalOrderComboBoxWF"
+								enabled="{lcl>/isEditMode}"
+								type="Text"
+								visible="{= (${lcl>/isEditMode} ===true)}"
+								value="{ctx>/internalOrderDisplayName}"
+								placeholder="Select an internal order ..."
+								showValueHelp="true"
+								valueHelpOnly="false"
+								showSuggestion="false"
+								valueHelpRequest="handleValueHelpInternalOrder"
+								suggest="handleSuggest"
+								suggestionItemSelected="onSelectInternalOrder"
+								width="100%"
+								class="sapUiSmallMarginBottom"
+								suggestionItems="{IternalOrder>/Internal}">
+								<m:suggestionItems>
+									<core:Item id="intlistord" text="{IternalOrder>Description}" key="{IternalOrder>OrderNumber}" />
+								</m:suggestionItems>
+							</m:Input>
+							<!--<m:Select-->
+							<!--    visible="{= (${lcl>/isEditMode} ===true)}"-->
+							<!--	id="internalOrderComboBoxWF"-->
+							<!--	selectedKey="{ctx>/internalOrder}"-->
+							<!--	showSecondaryValues= "true"-->
+							<!--	enabled="{lcl>/isEditMode}"-->
+							<!--	forceSelection="false"-->
+							<!--	change="onSelectInternalOrder">-->
+							<!--</m:Select>-->
+							
+							<m:Label id="forFyear" text="For fiscal year" required="true"/>
+							<m:Label id="Fyear" text="Requested budget for this year" required="true"/>
+							<l:Grid id="gd" defaultSpan="XL3 L4 M6 S12" hSpacing="0" vSpacing="0">
+							<!--<m:Input
+								type= "Number"
+								editable="{lcl>/isEditMode}"
+								value="{ctx>/requestedBudgetCurrentYear}"
+								placeholder="Please enter requested budget in EUR..."/>-->
+							<m:Input id="budcur"
+								editable="{lcl>/isEditMode}"
+								value="{path:'ctx>/requestedBudgetCurrentYear',
+							            type:'sap.ui.model.type.Float',formatOptions: {
+							            minFractionDigits: 2,
+							            groupingEnabled: true
+							           }}"
+							           placeholder="Please enter requested budget" description="{ctx>/currencyCode}" change="onChangeAmount"/>	
+							<!--	<m:Text id="eur" text="{ctx>/currencyCode}" class="sapUiTinyMarginBegin"/>-->
+							</l:Grid>
+							<m:Label id="budnexty" text="Requested budget for next year" required="false"/>
+							<l:Grid id="gd2" defaultSpan="XL3 L4 M6 S12" hSpacing="0" vSpacing="0">
+							<m:Input id="bnextyear"
+								editable="{lcl>/isEditMode}"
+								value="{path:'ctx>/requestdBudgetNextYear',
+							            type:'sap.ui.model.type.Float',formatOptions: {
+							            minFractionDigits: 2,
+							            groupingEnabled: true
+							           }}"
+								placeholder="Please enter requested budget" description="{ctx>/currencyCode}" change="onChangeAmount"/>
+								<!--<m:Text id="eur2" text="{ctx>/currencyCode}" class="sapUiTinyMarginBegin"/>-->
+							</l:Grid>	
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection id="planbudg" title="Plan/Budget">
+				<subSections>
+					<ObjectPageSubSection id="sunplanbudg">
+						<!--<form:SimpleForm maxContainerCols="3" editable="true" layout="ResponsiveGridLayout">-->
+							<!--<m:Label text=""/>-->
+							<m:VBox id="pbvbox">
+								<m:Label id="pb" text="Current Plan/Budget For Requested Order"/>
+								<m:Label id="pbtext" text=""/>
+								<t:Table id="changeSupplementTable" selectionMode="None" visibleRowCount="2" threshold="15" enableBusyIndicator="true"
+								ariaLabelledBy="FiscalYear" rows="{ctx>/budgets/d/results}">
+								<t:columns>
+									<t:Column id="clm1" width="100%">
+										<m:Label id="lab1" text="Fiscal year"/>
+										<t:template>
+											<m:Text id="txt1" text="{test>FiscalYear}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column id="clm2" width="100%" hAlign="Right">
+										<m:Label id="lab2" text="Plan Vers.0"/>
+										<t:template>
+											<m:Text id="txt2" text="{
+												path: 'test>PlanVersion0',
+												formatter: '.formatter.In_en_US_WithCurrency'
+											} {ctx>/currencyCode}" 
+											 wrapping="false"/>
+										    <!--<m:Text id="txt2" text="{test>PlanVersion0} {ctx>/currencyCode}"
+											 wrapping="false"/>-->
+										</t:template>
+									</t:Column>
+									<t:Column id="clm3" width="100%" hAlign="Right">
+										<m:Label id="lab3" text="Plan Vers.1"/>
+										<t:template>
+											<m:Text id="txt3" text="{
+													path: 'test>PlanVersion1',
+													formatter: '.formatter.In_en_US_WithCurrency'
+												} {ctx>/currencyCode}" wrapping="false"/>
+										    <!--<m:Text id="txt3" text="{test>PlanVersion1} {ctx>/currencyCode}"  wrapping="false"/>-->
+										</t:template>
+									</t:Column>
+									<t:Column id="clm4" width="100%" hAlign="Right">
+										<m:Label id="lab4" text="Budget"/>
+										<t:template>
+											<m:Text id="txt4" text="{
+													path: 'test>Budget',
+													formatter: '.formatter.In_en_US_WithCurrency'
+												} {ctx>/currencyCode}" wrapping="false"/>
+										<!--	<m:Text id="txt4" text="{test>Budget} {ctx>/currencyCode}" wrapping="false"/>-->
+										</t:template>
+									</t:Column>
+<!--									<t:Column width="7rem">
+										<m:Label text="Actual"/>
+										<t:template>
+											<m:Text text="{
+													path: 'ctx>Actual',
+													formatter: '.formatter.currencyValueEUR'
+												}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="7rem">
+										<m:Label text="Commitment"/>
+										<t:template>
+											<m:Text text="{
+													path: 'ctx>Commitment',
+													formatter: '.formatter.currencyValueEUR'
+												}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+-->									
+									<t:Column id="clm5" width="100%" hAlign="Right">
+										<m:Label id="lab5" text="Allotted"/>
+										<t:template>
+											<m:Text id="txt5" text="{
+													path: 'test>Allotted',
+													formatter: '.formatter.In_en_US_WithCurrency'
+												} {ctx>/currencyCode}"  wrapping="false"/>
+										<!--	<m:Text id="txt5" text="{test>Allotted} {ctx>/currencyCode}"  wrapping="false"/>-->
+										</t:template>
+									</t:Column>
+									<t:Column id="clm" width="100%" hAlign="Right">
+										<m:Label id="bdg" text="Available BDG"/>
+										<t:template>
+											<m:Text id="available" text="{
+													path: 'test>Available',
+													formatter: '.formatter.In_en_US_WithCurrency'
+												} {ctx>/currencyCode}" wrapping="false"/>
+											<!--<m:Text id="available" text="{test>Available} {ctx>/currencyCode}" wrapping="false"/>-->
+										</t:template>
+									</t:Column>
+								</t:columns>
+							</t:Table>
+							</m:VBox>
+							
+							
+						<!--</form:SimpleForm>-->
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection id="file" title="Files">
+				<subSections>
+					<ObjectPageSubSection id="subfile">
+						<m:UploadCollection 
+								id="UploadCollection"
+								multiple="false"
+								uploadEnabled= "true"
+								uploadUrl="/sap/fiori/cerbudgetapprove/filebucketservice/upload"
+								items="{path : 'filebucketservice>/_TODO_/Files', model: 'filebucketservice',templateShareable : 'true'}"
+								numberOfAttachmentsText =" "
+								fileDeleted="onFileDelete"
+								beforeUploadStarts="onBeforeUploadStarts"
+								uploadComplete="onUploadComplete">
+								<m:items>
+									<m:UploadCollectionItem id="filebckt"
+									documentId="{filebucketservice>Id}"
+									visibleEdit="false"
+									fileName="{filebucketservice>Name}" mimeType="{filebucketservice>MimeType}" thumbnailUrl="{filebucketservice>thumbnailUrl}"
+										url="https://cerrepoaccessbi0brchgc3.eu2.hana.ondemand.com/FileBucketProvider/get?id={filebucketservice>Id}"><!-- tw72h2gxnz bi0brchgc3 -->
+										<m:attributes>
+											<m:ObjectAttribute id="titl" title="{title}" text="{text}" active="{active}"/>
+										</m:attributes>
+										<m:statuses>
+											<m:ObjectStatus id="ttl" title="{title}" text="{text}" state="{state}"/>
+										</m:statuses>
+									</m:UploadCollectionItem>
+								</m:items>
+						</m:UploadCollection>
+						</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection id="cmt" title="Comments">
+				<subSections>
+					<ObjectPageSubSection id="subcmt">
+						<form:SimpleForm id="edt" editable="false" layout="ResponsiveGridLayout" width="100%">
+							<!--	<m:Label text="Requester comment"/>
+								<m:Text text="{ctx>/comment}"/> -->
+							<!-- The comments should be displayed in a TextBlock, as added below
+								<m:Label text="VP: {ctx>/vpApprover}" visible="{=${ctx>/workflowStep} > 2}"/>
+								<m:Text text="{ctx>/vpComment}" visible="{=${ctx>/workflowStep} > 2}"/>
+								
+								<m:Label text="Controlling: {ctx>/ccApprover}" visible="{=${ctx>/workflowStep} > 3}"/>
+								<m:Text text="{ctx>/ccComment}" visible="{=${ctx>/workflowStep} > 3}"/>
+							
+								<m:Label text="CFO: {ctx>/cfoApprover}" visible="{=${ctx>/workflowStep} > 4}"/>
+								<m:Text text="{ctx>/cfoComment}" visible="{=${ctx>/workflowStep} > 4}"/>
+								
+								<m:Label text="MD(1): {ctx>/md1Approver}" visible="{=${ctx>/workflowStep} > 5}"/>
+								<m:Text text="{ctx>/md1Comment}" visible="{=${ctx>/workflowStep} > 5}"/>
+							
+								<m:Label text="MD(2): {ctx>/md2Approver}" visible="{=${ctx>/workflowStep} > 6}"/>
+								<m:Text text="{ctx>/md2Comment}" visible="{=${ctx>/workflowStep} >= 6}"/>
+							-->	
+								<m:Label id="comment" text="Comments"/>
+								<m:Text id="comhis"	text="{ctx>/sCommentHistory}"/>
+									
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection id="approval" title="Approvals">
+				<subSections>
+					<ObjectPageSubSection id="subapp">
+						<form:SimpleForm id="appsf" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout">
+							<form:content>
+								<m:Label id="vplabel" text="VP Function" visible="{=${ctx>/workflowStep} > 2}"/>
+								<m:Text id="vp" text="{ctx>/vpApprover}" visible="{=${ctx>/workflowStep} > 2}"/>
+								
+								<m:Label id="conlabel" text="Controlling" visible="{=${ctx>/workflowStep} > 3}"/>
+								<m:Text id="con" text="{ctx>/ccApprover}" visible="{=${ctx>/workflowStep} > 3}"/>
+							
+								<m:Label id="cfolabel" text="CFO" visible="{=${ctx>/workflowStep} > 4}"/>
+								<m:Text id="cfo" text="{ctx>/cfoApprover}" visible="{=${ctx>/workflowStep} > 4}"/>
+								
+								<m:Label id="md1label" text="MD1" visible="{=${ctx>/workflowStep} > 5}"/>
+								<m:Text id="md1" text="{ctx>/md1Approver}" visible="{=${ctx>/workflowStep} > 5}"/>
+								
+								<m:Label id="md2label" text="MD2" visible="{=${ctx>/workflowStep} > 6}"/>
+								<m:Text id="md2" text="{ctx>/md2Approver}" visible="{=${ctx>/workflowStep} > 6}"/>
+								
+								<m:Label id="commentlabel" text="Please enter a comment if you decline the request"/>
+								<m:TextArea id="vpComboTextArea" 
+									rows="8" 
+									placeholder="Enter your comments" 
+									value="{ctx>/defaultComment}"/>
+								<!--<m:Label text="Select Approver {ctx>/nextWorkflowStepDescr}"/>-->
+								<!--<m:Select
+									id="approverComboBox"
+									selectedKey="{ctx>/nextApprover}"
+									forceSelection="false">
+									<core:ListItem key="{Zwfdomain1}" text="{SecondName}, {FirstName}"/>
+								</m:Select>-->
+								<m:Label id="selectapprover" text="Select Approver {path: 'ctx>/nextWorkflowStepDescr', formatter: '.formatter.roleChange'}"/> 
+								<m:Select id="vpComboBoxWF" visible="{=${ctx>/showApprovers}}" forceSelection="false"  change="onSelectApprover" selectedKey="{ctx>/selectedNextApprover}"
+								     	items="{ path: 'ctx>/approvers/cfo/d/results',
+								     	sorter: { path: 'FirstName' }, length: '100000'}">
+								     	<!--filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'VP' } }">-->
+									<core:ListItem id="selectapproverlist" key="{ctx>Zwfdomain1}" text="{ctx>FirstName} {ctx>SecondName}" additionalText="{ctx>SecondName}"/>
+								</m:Select>
+								<m:Label id="selectusertofwd" text="Select user to forward to" visible="{= (${ctx>/workflowStep} !== 1 &amp;&amp; ${ctx>/isForwarding} === false)}"/>
+								<m:Select id="forwardingComboBox" forceSelection="false" change="onSelectForwarding" selectedKey="{ctx>/forwardedToApprover}"
+								        visible="{= (${ctx>/workflowStep} !== 1 &amp;&amp; ${ctx>/isForwarding} === false)}"
+								        showSecondaryValues="true"
+								     	items="{ path: 'ctx>/oForwardingUsers',
+								     	length: '100000'}">
+								     	<!--filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'VP' } }">-->
+									<core:ListItem id="selectusertofwdlist" key="{ctx>Zwfdomain1}" text="{ctx>Name}" additionalText = "{ctx>DeputyRole}"/>
+								</m:Select>
+							</form:content>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+		</sections>
+	</ObjectPageLayout>
+</mvc:View>

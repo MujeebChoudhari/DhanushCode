@@ -1,0 +1,34 @@
+{
+    "application": {
+        "id": "",
+        "title": "gb.wf.cer.purchase.init.cerpurchaseinit",
+        "type": "SAP_UI5_Component",
+        "componentUrl": "/",
+        "appUrl": "#cerpurchaseinit-Display",
+        "navigationComponentName": "gb.wf.cer.purchase.init",
+        "intentSemanticObject": "cerpurchaseinit",
+        "intentAction": "Display",
+        "html5ApplicationName": "cerpurchaseinit",
+        "HCPParentApplicationName": ""
+    },
+    "assignment": {
+        "groups": [
+            "f398b64d-c43e-4351-9b82-169df3ef8f36-1557393048035"
+        ],
+        "contentPackages": [
+            "dc0e11cc-8e46-4abf-86c7-04c6168c317f-1557393658374"
+        ],
+        "categories": []
+    },
+    "tile": {
+        "type": "StaticTile",
+        "title": "Start Purchase Order Request",
+        "subtitle": "Create PO",
+        "searchKeywords": "Start Purchase Order Request,Create PO",
+        "displayIconUrl": "sap-icon://approvals",
+        "displayInfoText": "",
+        "size": "1x1",
+        "serviceURL": "",
+        "refreshInterval": ""
+    }
+}

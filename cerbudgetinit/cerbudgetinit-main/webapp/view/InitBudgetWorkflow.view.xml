@@ -1,0 +1,493 @@
+<mvc:View controllerName="gb.wf.cer.budget.init.controller.InitBudgetWorkflow" displayBlock="true" xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:layout="sap.ui.layout" xmlns:t="sap.ui.table" xmlns:u="sap.ui.unified">
+
+	<App id="idAppControl">
+		<Page class="sapUiContentPadding" title="Budget Request">
+			<f:SimpleForm id="initBugetRequest" title="Request start" editable="true" layout="ResponsiveGridLayout">
+				<Label text="Title" required="false"/>
+				<Input id="shorttext" value="{budget>/ShortText}" placeholder="Please enter short text"/>
+				<Label text="Requester" required="false"/>
+				<Text text="{budget>/requesterDisplayName}"/>
+		<!--		<Input
+					value="{budget>/requester}"></Input>
+				<Label text="Requester email" required="true"/>
+				<Input
+					value="{budget>/requesterEmail}"></Input>
+		-->
+				<Label text="Legal Entity" required="true" visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"/>
+				<Select
+					id="legalEntityComboBox"
+					visible="{= (${budget>/isForwarding} === undefined  || ${budget>/isForwarding} === false)}"
+					selectedKey="{budget>/legalEntity}"
+					forceSelection="false"
+					showSecondaryValues= "true"
+					items="{
+						path: '/LegalEntity',
+						sorter: { path: 'CompanyCodeName' },
+						length: '100000'
+					}"
+					change="onSelectLegalEntity">
+					<core:ListItem key="{CompanyCode}" text="{CompanyCodeName}" additionalText = "{CompanyCode}"/>
+				</Select>
+				<Label text="Legal entity WF" required="true" visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"/>
+				<Select
+					id="legalEntityComboBox_WF"
+					visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"
+					selectedKey="{budget>/legalEntity}"
+					forceSelection="false"
+					showSecondaryValues= "true"
+					items="{
+						path: 'test>/LegalEntity',
+						sorter: { path: 'CompanyCodeName' },
+						length: '100000'
+					}"
+					change="onSelectLegalEntity">
+					<core:ListItem key="{test>CompanyCode}" text="{test>CompanyCodeName}" additionalText = "{test>CompanyCode}"/>
+				</Select>
+				<Label text="Cost Center" required="true" visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"/>
+				<Select
+					id="costCenterComboBox"
+					visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"
+					selectedKey="{budget>/costCenter}"
+					showSecondaryValues= "true"
+					enabled="false"
+					forceSelection="false"
+					change="onSelectCostCenter">
+				</Select>
+				
+				<Label text="Cost Center WF" required="true" visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"/>
+				<Select
+					id="costCenterComboBoxwf"
+					visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"
+					selectedKey="{budget>/costCenter}"
+					showSecondaryValues= "true"
+					enabled="true"
+					forceSelection="false"
+					items="{
+						path: 'test>/LegalEntity(\'DE02\')/to_CostCenter',
+						length: '10000'
+					}"
+					change="onSelectCostCenter">
+					<core:ListItem key="{test>CostCenter}" text="{test>CostCenterName}" additionalText = "{test>CostCenter}"/>
+				</Select>
+				<Label text="Type" required="true" visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"/>
+				<RadioButtonGroup select="onTypeChange" id="typeRadioButton" columns="2" editable="true" selectedIndex="0" visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}">
+					<buttons>
+						<RadioButton id="OC" text="OPEX" selected="true"/>
+						<RadioButton id="IV" text="CAPEX"/>
+					</buttons>
+				</RadioButtonGroup>
+				<Label text="Type WF" required="true" visible="{budget>/isForwarding}"/>
+				
+				<RadioButtonGroup select="onTypeChange" id="typeRadioButtonWF" columns="2" editable="true" visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}">
+					<buttons>
+						<RadioButton id="OC_WF" text="OPEX"/>
+						<RadioButton id="IV_WF" text="CAPEX"/>
+					</buttons>
+				</RadioButtonGroup>
+				<Label text="Internal Order" required="true" visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"/>
+				<Input
+					id="internalOrderComboBox"
+					enabled="false"
+					type="Text"
+					visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"
+					value="{budget>/internalOrderDisplayName}"
+					placeholder="Select an internal order ..."
+					showValueHelp="true"
+					valueHelpOnly="false"
+					showSuggestion="false"
+					valueHelpRequest="handleValueHelpInternalOrder"
+					suggest="handleSuggest"
+					suggestionItemSelected="onSelectInternalOrder"
+					width="100%"
+					class="sapUiSmallMarginBottom"
+					suggestionItems="{IternalOrder>/Internal}">
+					<suggestionItems>
+						<core:Item text="{IternalOrder>Description}" key="{IternalOrder>OrderNumber}" />
+					</suggestionItems>
+				</Input>
+				<!--<Select-->
+				<!--	id="internalOrderComboBox"-->
+				<!--	visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"-->
+				<!--	selectedKey="{budget>/internalOrder}"-->
+				<!--	showSecondaryValues= "true"-->
+				<!--	enabled="false"-->
+				<!--	forceSelection="false"-->
+				<!--	items="{-->
+				<!--		path: 'IternalOrder>/Internal',-->
+				<!--		sorter: { path: 'IternalOrder>Description' },-->
+				<!--		length: '10000'-->
+				<!--	}"-->
+				<!--	change="onSelectInternalOrder">-->
+				<!--	<core:ListItem key="{IternalOrder>OrderNumber}" text="{IternalOrder>Description}" additionalText="{IternalOrder>OrderNumber}"/>-->
+				<!--</Select>-->
+				<Label text="Internal OrderWF" required="true" 	visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"/>
+				<Select
+					id="internalOrderComboBoxWF"
+					visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"
+					selectedKey="{budget>/internalOrder}"
+					showSecondaryValues= "true"
+					enabled="true"
+					forceSelection="false"
+					change="onSelectInternalOrder">
+				</Select>
+				
+				<Label text="For fiscal year" required="true"/>
+			<!--	<Select
+					id="fiscalYearComboBox"
+					selectedKey="{budget>/fiscalYear}"
+					forceSelection="false"
+					showSecondaryValues= "false"
+					items="{
+						path: 'year>/years',
+						sorter: { path: 'id' }
+					}">
+					<core:ListItem key="{year>id}" text="{year>fiscalYear}" />
+				</Select>
+		-->		
+				<Label text="Requested Budget for this year" required="false"/>
+				<layout:Grid defaultSpan="XL3 L4 M6 S12" hSpacing="0" vSpacing="0">
+<!--				<Input value="{path:'budget>/requestedBudgetCurrentYear',
+							   type:'sap.ui.model.type.Float',formatOptions: {
+							   minFractionDigits: 2
+							  }}"
+				change="onChangeQuantity"
+				placeholder="Please enter requested budget in EUR..."/>
+-->				<Input id="BUDGET_CURNT_YEAR" value="{path:'budget>/requestedBudgetCurrentYear',
+							   type:'sap.ui.model.type.Float',
+							   formatOptions: {
+								minFractionDigits: 2
+								},
+							   constraints: { minimum: '0'}
+							   }"
+				parseError="handleValidationError" validationError="handleValidationError" change="onChangeQuantity"
+				validationSuccess="handleValidationSuccess"
+				placeholder="Please enter requested budget..."/>  <!--changed by Deeksha 26/10/2021-->
+				
+				<Text text="in {Currency>/CurrencyCode}" class="sapUiTinyMarginBegin"/>
+			<!--	<Input
+					type= "Number"
+					value="{budget>/requestedBudgetCurrentYear}"
+					placeholder="Please enter requested budget in €..."></Input>
+					<Text text=" in EUR" class="sapUiTinyMarginBegin"/>
+						<Label text="TEST (in €)"/>
+							<Text text="{
+												path: 'budget>/requestedBudgetCurrentYear',
+												formatter: '.formatter.currencyValueEUR'
+											}"/>
+				-->	
+				</layout:Grid>
+				<Label text="Requested Budget for next year" required="false"/>
+				<layout:Grid defaultSpan="XL3 L4 M6 S12" hSpacing="0" vSpacing="0">
+<!--				<Input
+					value="{path:'budget>/requestdBudgetNextYear',
+							   type:'sap.ui.model.type.Float',formatOptions: {
+							   minFractionDigits: 2
+							  }}"
+					change="onChangeQuantity" 
+					placeholder="Please enter requested budget in EUR..."></Input>-->
+					
+				<Input id="BUDGET_NEXT_YEAR" value="{path:'budget>/requestdBudgetNextYear',
+							   type:'sap.ui.model.type.Float',
+							   formatOptions: {
+								minFractionDigits: 2
+								}
+							   }"
+				parseError="handleValidationErrorNext" validationError="handleValidationErrorNext" change="onChangeQuantity"
+				validationSuccess="handleValidationSuccess"
+				placeholder="Please enter requested budget..."/>  <!--changed by Deeksha 26/10/2021-->
+					
+					<Text text="in {Currency>/CurrencyCode}" class="sapUiTinyMarginBegin"/>
+				</layout:Grid>
+
+				<Label text="Internal Order overview" visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"/>
+				<t:Table
+					id="changeSupplementTable"
+					visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"
+					selectionMode="None"
+					visibleRowCount="2"
+					threshold="15"
+					enableBusyIndicator="true"
+					ariaLabelledBy="FiscalYear">
+						<t:columns>
+							<!--<t:Column width="5rem">
+								<Label text="Order Number" />
+								<t:template>
+									<Text text="{OrderNumber}" wrapping="false" />
+								</t:template>
+							</t:Column>-->
+							<t:Column width= "50%">
+								<Label text="Fiscal year" />
+								<t:template>
+									<Text text="{FiscalYear}" wrapping="false" />
+								</t:template>
+							</t:Column>
+							<t:Column
+								width= "100%" hAlign="Right">
+								<Label text="Plan Vers.0" />
+								<t:template>
+									<!--<Text text="{PlanVersion0} {Currency}"
+											wrapping="false" textAlign="Right"/>-->
+											<Text textAlign="Right" text="{path: 'PlanVersion0',
+									   formatter: '.formatter.In_en_DE_WithCurrency'} {Currency}" wrapping="false"/>
+								</t:template>
+							</t:Column>
+							<t:Column
+									width= "100%" hAlign="Right">
+								<Label text="Plan Vers.1" />
+								<t:template>
+									<!--<Text text="{PlanVersion1} {Currency}"
+											wrapping="false" textAlign="Right"/>-->
+											<Text textAlign="Right" text="{path: 'PlanVersion1',
+									   formatter: '.formatter.In_en_DE_WithCurrency'} {Currency}" wrapping="false"/>
+								</t:template>
+							</t:Column>
+							<t:Column
+									width= "100%" hAlign="Right">
+								<Label text="Budget" />
+								<t:template>
+									<!--<Text  wrapping="false" textAlign="Right"
+											text="{Budget} {Currency}"/>-->
+											<Text textAlign="Right" text="{path: 'Budget',
+									   formatter: '.formatter.In_en_DE_WithCurrency'} {Currency}" wrapping="false"/>
+								</t:template>
+							</t:Column>
+<!--							<t:Column
+								width="8rem">
+								<Label text="Actual" />
+								<t:template>
+									<Text text="{
+												path: 'Actual',
+												formatter: '.formatter.currencyValueEUR'
+											}"
+											wrapping="false" textAlign="Right"/>
+								</t:template>
+							</t:Column>
+							<t:Column
+								width="8rem">
+								<Label text="Commitment" />
+								<t:template>
+									<Text text="{
+												path: 'Commitment',
+												formatter: '.formatter.currencyValueEUR'
+											}"
+											wrapping="false" textAlign="Right"/>
+								</t:template>
+							</t:Column>
+-->							
+							<t:Column
+									width= "100%" hAlign="Right">
+								<Label text="Allotted" />
+								<t:template>
+								<!--	<Text text="{Allotted} {Currency}"
+											wrapping="false" textAlign="Right"/>-->
+											<Text textAlign="Right" text="{path: 'Allotted',
+									   formatter: '.formatter.In_en_DE_WithCurrency'} {Currency}" wrapping="false"/>
+								</t:template>
+							</t:Column>
+							<t:Column
+								width= "100%" hAlign="Right">
+								<Label text="Available BDG" />
+								<t:template>
+									<!--<Text text="{Available} {Currency}"
+											wrapping="false" textAlign="Right"/>-->
+												<Text textAlign="Right" text="{path: 'Available',
+									   formatter: '.formatter.In_en_DE_WithCurrency'} {Currency}" wrapping="false"/>
+								</t:template>
+							</t:Column>
+						</t:columns>	
+				    </t:Table>
+				 <Label text="Internal order overview WF" 	visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"/>   
+				<t:Table
+					id="changeSupplementTableWF"
+					visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"
+					selectionMode="None"
+					visibleRowCount="2"
+					threshold="15"
+					enableBusyIndicator="true"
+					ariaLabelledBy="FiscalYear">
+						<t:columns>
+							<!--<t:Column width="5rem">
+								<Label text="Order Number" />
+								<t:template>
+									<Text text="{OrderNumber}" wrapping="false" />
+								</t:template>
+							</t:Column>-->
+							<t:Column width="8rem">
+								<Label text="Fiscal year" />
+								<t:template>
+									<Text text="{test>FiscalYear}" wrapping="false" />
+								</t:template>
+							</t:Column>
+							<t:Column
+								width="8rem">
+								<Label text="Plan Vers.0" />
+								<t:template>
+									<Text text="{
+												path: 'test>PlanVersion0',
+												formatter: '.formatter.currencyValueEUR'
+											}"
+											wrapping="false" textAlign="Right"/>
+								</t:template>
+							</t:Column>
+							<t:Column
+								width="8rem">
+								<Label text="Plan Vers.1" />
+								<t:template>
+									<Text text="{
+												path: 'test>PlanVersion1',
+												formatter: '.formatter.currencyValueEUR'
+											}"
+											wrapping="false" textAlign="Right"/>
+								</t:template>
+							</t:Column>
+							<t:Column
+								width="8rem">
+								<Label text="Budget" />
+								<t:template>
+									<Text  wrapping="false" textAlign="Right"
+											text="{
+											path: 'test>Budget',
+											formatter: '.formatter.currencyValueEUR'
+									}"/>
+								</t:template>
+							</t:Column>
+<!--							<t:Column
+								width="8rem">
+								<Label text="Actual" />
+								<t:template>
+									<Text text="{
+												path: 'Actual',
+												formatter: '.formatter.currencyValueEUR'
+											}"
+											wrapping="false" textAlign="Right"/>
+								</t:template>
+							</t:Column>
+							<t:Column
+								width="8rem">
+								<Label text="Commitment" />
+								<t:template>
+									<Text text="{
+												path: 'Commitment',
+												formatter: '.formatter.currencyValueEUR'
+											}"
+											wrapping="false"textAlign="Right" />
+								</t:template>
+							</t:Column>
+-->							
+							<t:Column
+								width="8rem">
+								<Label text="Allotted" />
+								<t:template>
+									<Text text="{
+												path: 'test>Allotted',
+												formatter: '.formatter.currencyValueEUR'
+											}"
+											wrapping="false" textAlign="Right"/>
+								</t:template>
+							</t:Column>
+							<t:Column>
+								<Label text="Available BDG" />
+								<t:template>
+									<Text text="{
+												path: 'test>Available',
+												formatter: '.formatter.currencyValueEUR'
+											}"
+											wrapping="false" textAlign="Right"/>
+								</t:template>
+							</t:Column>
+						</t:columns>	
+				    </t:Table>
+               <!--started by mrithul 5/1/2022-->
+                <Label text="Select approver (PJM)" required="false" visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"/>
+				<Select
+					id="pjmComboBox" enabled="false"
+					selectedKey="{budget>/nextApproverPjm}"
+					visible="false"
+					forceSelection="false"
+					change="onSelectPJM" >
+					<!--visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"-->
+				</Select>
+				<Label text="Select approver (PJM) WF" required="true" visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"/>
+				<Select 
+					id="pjmComboBoxMF" enabled="false"
+					visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"
+					selectedKey="{budget>/nextApproverPjm}"
+					forceSelection="false"
+					change="onSelectPJM" >
+					<core:ListItem key="{Zwfdomain1}" text="{FirstName} {SecondName}" additionalText="{SecondName}"/>
+				</Select>
+				<!--ended by mrithul 5/1/2022-->
+				<Label text="Select approver (VP)" required="false" visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"/>
+				<Select
+					id="vpComboBox"
+					selectedKey="{budget>/nextApproverVp}"
+					visible="false"  
+					forceSelection="false"
+					change="onSelectVP" >
+					<!--visible="{= (${budget>/isForwarding}===undefined  || ${budget>/isForwarding} === false)}"-->
+					<!--<core:ListItem key="{Zwfdomain1}" text="{FirstName} {SecondName}" additionalText="{SecondName}"/>-->
+				</Select>
+				<Label text="Select approver (VP) WF" required="false" visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"/>
+				<Select 
+					id="vpComboBoxMF"
+					visible="{= (${budget>/isForwarding} !==undefined &amp;&amp;  ${budget>/isForwarding} === true)}"
+					selectedKey="{budget>/nextApproverVp}"
+					forceSelection="false"
+					change="onSelectVP" >
+					<core:ListItem key="{Zwfdomain1}" text="{FirstName} {SecondName}" additionalText="{SecondName}"/>
+				</Select>
+				
+				
+				<Label text="Executive summary/ comments" required="true"/>
+				<TextArea 
+					rows="8"
+					value="{budget>/comment}"
+					placeholder="Please enter your comment ..."></TextArea>	
+
+					
+				<Label text="Attachments" required="false"/>
+				<UploadCollection   id="UploadCollection"
+									multiple="false"
+									uploadEnabled= "true"
+									items="{path : 'filebucketservice>/_TODO_/Files', model: 'filebucketservice',templateShareable : 'true'}"
+									uploadUrl="/filebucketservice/upload"
+									numberOfAttachmentsText =" "
+									fileDeleted="onFileDelete"
+									beforeUploadStarts="onBeforeUploadStarts"
+									uploadComplete="onUploadComplete"
+									>
+					<items>
+						<UploadCollectionItem 
+						documentId="{filebucketservice>Id}"
+						visibleEdit="false"
+						fileName="{filebucketservice>Name}" mimeType="{filebucketservice>MimeType}" thumbnailUrl="{filebucketservice>thumbnailUrl}" 
+						url="https://cerrepoaccessbi0brchgc3.eu2.hana.ondemand.com/FileBucketProvider/get?id={filebucketservice>Id}"> <!-- tw72h2gxnz bi0brchgc3 -->
+						
+							<attributes>
+								<ObjectAttribute title="{title}" text="{text}" active="{active}"/>
+							</attributes>
+							<statuses>
+								<ObjectStatus title="{title}" text="{text}" state="{state}"/>
+							</statuses>
+						</UploadCollectionItem>
+					</items>
+				</UploadCollection>
+			
+			</f:SimpleForm>
+			
+			<footer>
+				<OverflowToolbar id="otbFooter">
+					<ToolbarSpacer/>
+					<Button id="submit" type="Accept" text="Submit Budget Request" press=".onStartWorkflow">
+						<layoutData><OverflowToolbarLayoutData priority="NeverOverflow" /></layoutData>
+					</Button>
+				</OverflowToolbar>
+			</footer>
+			<!--
+			<Text width="100%" class="sapUiSmallMarginTop" text="{/result}" maxLines="0"/>
+			<Button class="sapUiSmallMarginTop" text="Submit budget request to VP" press=".onStartWorkflow"/>
+			-->
+		</Page>
+	</App>
+</mvc:View>

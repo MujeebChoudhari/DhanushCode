@@ -1,0 +1,9 @@
+<mvc:View controllerName="nscommunitydmadminui5.communitydmadminui5.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m">
+   <Page id="page" title="Document Management Admin UI">
+  <content>
+    <core:ComponentContainer usage="documentTable" height="100%" async="false" manifest="true"/>
+  </content>
+</Page>
+</mvc:View>

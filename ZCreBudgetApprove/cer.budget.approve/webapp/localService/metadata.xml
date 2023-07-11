@@ -1,0 +1,125 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="Z_WORKFLOW_SRV" xml:lang="de" sap:schema-version="1">
+			<EntityType Name="RequestedBudgetType" sap:content-version="1">
+				<Key><PropertyRef Name="OrderNumber"/><PropertyRef Name="FiscalYear"/></Key><Property Name="CurrentBudget" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="OrderNumber" Type="Edm.String" Nullable="false" MaxLength="18" sap:unicode="false" sap:label="Objekt" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="FiscalYear" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Geschäftsjahr"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Assigned" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="PlannedTotalV0" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Währung" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/><Property Name="PlannedTotalV1" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/></EntityType>
+			<EntityType Name="SelectApproverType" sap:content-version="1">
+				<Key><PropertyRef Name="Zwfdomain1"/><PropertyRef Name="Zwfrole1"/><PropertyRef Name="Zwfbukrs"/></Key><Property Name="FirstName" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Vorname" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Zwfdomain1" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="SecondName" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Nachname" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Zwfrole1" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:creatable="false" sap:updatable="false"
+					sap:sortable="false" sap:filterable="false"/><Property Name="Zwfbukrs" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Buchungskreis"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Zwftitle" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Anrede" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Zwfkordh" Type="Edm.String" Nullable="false" MaxLength="34" sap:unicode="false" sap:label="Set-Id" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Zwfkstlh" Type="Edm.String" Nullable="false" MaxLength="34" sap:unicode="false" sap:label="Set-Id" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Zwfdomain2" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Zwftitle2" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Anrede" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Zwfname3" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Vorname" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Zwfname4" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Nachname" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/></EntityType>
+			<EntityType Name="CurrencyType" sap:content-version="1">
+				<Key><PropertyRef Name="Currency"/></Key><Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Währung" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/></EntityType>
+			<EntityType Name="PurchasingOrganizationType" sap:content-version="1">
+				<Key><PropertyRef Name="PurchasingOrganization"/></Key><Property Name="PurchasingOrganization" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Einkaufsorg"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Bezeichnung"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="CompanyCode" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Buchungskreis"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/></EntityType>
+			<EntityType Name="RequestedOrderType" sap:content-version="1">
+				<Key><PropertyRef Name="InternalOrder"/><PropertyRef Name="FiscalYear"/></Key><Property Name="InternalOrder" Type="Edm.String" Nullable="false" MaxLength="18" sap:unicode="false" sap:label="Objekt"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="FiscalYear" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Geschäftsjahr"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="PlanVersion0" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="PlanVersion1" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Budget" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Actual" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Commitment" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Allotted" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Available" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Betrag"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/></EntityType>
+			<EntityType Name="LegalEntityType" sap:content-version="1">
+				<Key><PropertyRef Name="CompanyCode"/></Key><Property Name="CompanyCode" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Buchungskreis"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="CompanyCodeName" Type="Edm.String" Nullable="false" MaxLength="25" sap:unicode="false" sap:label="Name der Firma"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><NavigationProperty Name="to_Currency" Relationship="Z_WORKFLOW_SRV.LegalEntityTypeCurrencyType"
+					FromRole="FromRole_LegalEntityTypeCurrencyType" ToRole="ToRole_LegalEntityTypeCurrencyType"/><NavigationProperty Name="to_PurchasingOrganization" Relationship="Z_WORKFLOW_SRV.LegalEntityTypePurchasingOrganizationTyp"
+					FromRole="FromRole_LegalEntityTypePurchasingOrganizationTyp" ToRole="ToRole_LegalEntityTypePurchasingOrganizationTyp"/><NavigationProperty Name="to_CostCenter" Relationship="Z_WORKFLOW_SRV.LegalEntityTypeCostCenterType"
+					FromRole="FromRole_LegalEntityTypeCostCenterType" ToRole="ToRole_LegalEntityTypeCostCenterType"/></EntityType>
+			<EntityType Name="CostCenterType" sap:content-version="1">
+				<Key><PropertyRef Name="CostCenter"/></Key><Property Name="CompanyCode" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Buchungskreis"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="CostCenter" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Kostenstelle"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="CostCenterName" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Name 1"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/></EntityType>
+			<EntityType Name="InternalOrderType" sap:content-version="1">
+				<Key><PropertyRef Name="OrderNumber"/></Key><Property Name="CompanyCode" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Buchungskreis"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Bezeichnung"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="CostCenter" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Zyklus" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="OrderNumber" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Auftrag" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="ObjectClass" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Objektklasse"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/></EntityType>
+			<EntityType Name="SupplierType" sap:content-version="1">
+				<Key><PropertyRef Name="PurchasingOrganization"/><PropertyRef Name="Vendor"/></Key><Property Name="PurchasingOrganization" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Einkaufsorg"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Vendor" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Lieferant" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Name1" Type="Edm.String" Nullable="false" MaxLength="35" sap:unicode="false" sap:label="Name" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Name2" Type="Edm.String" Nullable="false" MaxLength="35" sap:unicode="false" sap:label="Name 2" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/></EntityType>
+			<EntityType Name="GLAccountType" sap:content-version="1">
+				<Key><PropertyRef Name="CompanyCode"/><PropertyRef Name="AccountNumber"/></Key><Property Name="CompanyCode" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Buchungskreis"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="AccountNumber" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Sachkonto"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Sprache" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="ChartAccounts" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Kontenplan"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/><Property Name="LongText" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="Langtext" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false"/></EntityType>
+			<EntityType Name="UnitMeasureType" sap:content-version="1">
+				<Key><PropertyRef Name="UnitMeasure"/></Key><Property Name="UnitMeasure" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="int. Maßeinheit"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/><Property Name="UnitText" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Maßeinh.Text l"
+					sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/></EntityType>
+			<EntityType Name="AvailableCurrencyType" sap:content-version="1">
+				<Key><PropertyRef Name="Currency"/></Key><Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Währung" sap:creatable="false"
+					sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/></EntityType>
+			<Association Name="LegalEntityTypePurchasingOrganizationTyp" sap:content-version="1"><End Type="Z_WORKFLOW_SRV.LegalEntityType" Multiplicity="1" Role="FromRole_LegalEntityTypePurchasingOrganizationTyp"/><End Type="Z_WORKFLOW_SRV.PurchasingOrganizationType" Multiplicity="*" Role="ToRole_LegalEntityTypePurchasingOrganizationTyp"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_LegalEntityTypePurchasingOrganizationTyp"><PropertyRef Name="CompanyCode"/></Principal>
+					<Dependent Role="ToRole_LegalEntityTypePurchasingOrganizationTyp"><PropertyRef Name="CompanyCode"/></Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="LegalEntityTypeCostCenterType" sap:content-version="1"><End Type="Z_WORKFLOW_SRV.LegalEntityType" Multiplicity="1" Role="FromRole_LegalEntityTypeCostCenterType"/><End Type="Z_WORKFLOW_SRV.CostCenterType" Multiplicity="*" Role="ToRole_LegalEntityTypeCostCenterType"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_LegalEntityTypeCostCenterType"><PropertyRef Name="CompanyCode"/></Principal>
+					<Dependent Role="ToRole_LegalEntityTypeCostCenterType"><PropertyRef Name="CompanyCode"/></Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="LegalEntityTypeCurrencyType" sap:content-version="1"><End Type="Z_WORKFLOW_SRV.LegalEntityType" Multiplicity="1" Role="FromRole_LegalEntityTypeCurrencyType"/><End Type="Z_WORKFLOW_SRV.CurrencyType" Multiplicity="1" Role="ToRole_LegalEntityTypeCurrencyType"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_LegalEntityTypeCurrencyType"><PropertyRef Name="CompanyCode"/></Principal>
+					<Dependent Role="ToRole_LegalEntityTypeCurrencyType"><PropertyRef Name="Currency"/></Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<EntityContainer Name="Z_WORKFLOW_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx"><EntitySet Name="RequestedBudget" EntityType="Z_WORKFLOW_SRV.RequestedBudgetType" sap:creatable="false" sap:updatable="false"
+				sap:deletable="false" sap:pageable="false" sap:content-version="1"/><EntitySet Name="SelectApprover" EntityType="Z_WORKFLOW_SRV.SelectApproverType" sap:creatable="false" sap:updatable="false"
+				sap:deletable="false" sap:pageable="false" sap:content-version="1"/><EntitySet Name="Currency" EntityType="Z_WORKFLOW_SRV.CurrencyType" sap:creatable="false" sap:updatable="false" sap:deletable="false"
+				sap:pageable="false" sap:content-version="1"/><EntitySet Name="PurchasingOrganization" EntityType="Z_WORKFLOW_SRV.PurchasingOrganizationType" sap:creatable="false" sap:updatable="false"
+				sap:deletable="false" sap:pageable="false" sap:content-version="1"/><EntitySet Name="RequestedOrder" EntityType="Z_WORKFLOW_SRV.RequestedOrderType" sap:creatable="false" sap:updatable="false"
+				sap:deletable="false" sap:pageable="false" sap:content-version="1"/><EntitySet Name="LegalEntity" EntityType="Z_WORKFLOW_SRV.LegalEntityType" sap:creatable="false" sap:updatable="false" sap:deletable="false"
+				sap:pageable="false" sap:content-version="1"/><EntitySet Name="CostCenter" EntityType="Z_WORKFLOW_SRV.CostCenterType" sap:creatable="false" sap:updatable="false" sap:deletable="false"
+				sap:pageable="false" sap:content-version="1"/><EntitySet Name="InternalOrder" EntityType="Z_WORKFLOW_SRV.InternalOrderType" sap:creatable="false" sap:updatable="false"
+				sap:deletable="false" sap:pageable="false" sap:content-version="1"/><EntitySet Name="Supplier" EntityType="Z_WORKFLOW_SRV.SupplierType" sap:creatable="false" sap:updatable="false" sap:deletable="false"
+				sap:pageable="false" sap:addressable="false" sap:content-version="1"/><EntitySet Name="GLAccount" EntityType="Z_WORKFLOW_SRV.GLAccountType" sap:creatable="false" sap:updatable="false" sap:deletable="false"
+				sap:pageable="false" sap:addressable="false" sap:content-version="1"/><EntitySet Name="UnitMeasure" EntityType="Z_WORKFLOW_SRV.UnitMeasureType" sap:creatable="false" sap:updatable="false" sap:deletable="false"
+				sap:pageable="false" sap:addressable="false" sap:content-version="1"/><EntitySet Name="AvailableCurrency" EntityType="Z_WORKFLOW_SRV.AvailableCurrencyType" sap:creatable="false" sap:updatable="false"
+				sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+				<AssociationSet Name="LegalEntityCostCenter" Association="Z_WORKFLOW_SRV.LegalEntityTypeCostCenterType" sap:creatable="false"
+					sap:updatable="false" sap:deletable="false" sap:content-version="1"><End EntitySet="LegalEntity" Role="FromRole_LegalEntityTypeCostCenterType"/><End EntitySet="CostCenter" Role="ToRole_LegalEntityTypeCostCenterType"/></AssociationSet>
+				<AssociationSet Name="LegalEntityPurchasingOrganization" Association="Z_WORKFLOW_SRV.LegalEntityTypePurchasingOrganizationTyp"
+					sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"><End EntitySet="LegalEntity" Role="FromRole_LegalEntityTypePurchasingOrganizationTyp"/><End EntitySet="PurchasingOrganization" Role="ToRole_LegalEntityTypePurchasingOrganizationTyp"/></AssociationSet>
+				<AssociationSet Name="LegalEntityCurrency" Association="Z_WORKFLOW_SRV.LegalEntityTypeCurrencyType" sap:creatable="false"
+					sap:updatable="false" sap:deletable="false" sap:content-version="1"><End EntitySet="LegalEntity" Role="FromRole_LegalEntityTypeCurrencyType"/><End EntitySet="Currency" Role="ToRole_LegalEntityTypeCurrencyType"/></AssociationSet>
+			</EntityContainer><atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="./sap/Z_WORKFLOW_SRV/$metadata"/><atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="./sap/Z_WORKFLOW_SRV/$metadata"/></Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,29 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<TableSelectDialog id="tableSelectAsset" noDataText="No entries found" title="Select Asset" search="handleSearchAsset" confirm="handleConfirmAsset" cancel="handleConfirmAsset"
+		items="{ path : 'ctx>/assetNumbers/d/results', sorter : { path : 'MainAssetNumber', ascending : true }}">
+			<ColumnListItem>
+			<cells>		
+				<Text text="{ctx>MainAssetNumber}" />
+				<Text text="{ctx>AssetSubnumber}" />
+				<Text text="{ctx>AssetDescription}" />
+			</cells>
+		</ColumnListItem>
+		<columns>
+			<Column width="12em">
+				<header>
+					<Text text="Asset number"/>
+				</header>
+			</Column>
+			<Column width="12em">
+				<header>
+					<Text text="Sub Asset number"/>
+				</header>
+			</Column>
+			<Column width="12em" demandPopin="true">
+				<header>
+					<Text text="Description"/>
+				</header>
+			</Column>
+		</columns>
+	</TableSelectDialog>
+</core:FragmentDefinition>

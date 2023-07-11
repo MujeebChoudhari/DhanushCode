@@ -1,0 +1,863 @@
+<mvc:View controllerName="gb.wf.cer.purchase.approve.controller.ApprovePurchase" displayBlock="true" xmlns:core="sap.ui.core"
+	xmlns:form="sap.ui.layout.form" xmlns:l="sap.ui.layout" xmlns:m="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:t="sap.ui.table">
+	<ObjectPageLayout id="ObjectPageLayout" showTitleInHeaderContent="true" alwaysShowContentHeader="false" preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true" upperCaseAnchorBar="false">
+		<headerTitle>
+			<ObjectPageDynamicHeaderTitle>
+				<expandedHeading>
+					<!--	<m:Title text="Pre-Approval by VP" wrapping="true" class="sapUiSmallMarginEnd"/>-->
+				</expandedHeading>
+				<snappedHeading>
+					<!--	<m:Title text="Pre-Approval by VP" wrapping="true" class="sapUiSmallMarginEnd"/>
+					
+						<m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
+							<m:FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
+								<f:Avatar src="https://sapui5.hana.ondemand.com/{products>ProductPicUrl}" displaySize="S" displayShape="Square" class="sapUiTinyMarginEnd"/>
+								<m:Title text="{/task/Title}" wrapping="true"/>
+							</m:FlexBox>
+						</m:FlexBox>
+						-->
+				</snappedHeading>
+				<!--
+					<navigationActions>
+						<m:OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen" tooltip="Nav Action"
+							visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+					</navigationActions>
+					-->
+				<actions></actions>
+			</ObjectPageDynamicHeaderTitle>
+		</headerTitle>
+		<headerContent>
+			<m:FlexBox renderType="Bare" wrap="Wrap" fitContainer="true" justifyContent="SpaceBetween">
+				<!--<m:VBox renderType="Bare">
+					<m:ObjectAttribute title="{i18n>createdOn}" text="{/task/CreatedOn}"/>
+					<m:ObjectAttribute title="{i18n>description}" text="Jörg Zude"/>
+				</m:VBox>-->
+				<m:VBox renderType="Bare">
+					<m:ObjectStatus text="{/task/Status}" state="None"/>
+					<m:ObjectStatus text="{/task/Priority}" state="Success"/>
+				</m:VBox>
+			</m:FlexBox>
+		</headerContent>
+		<sections>
+			<ObjectPageSection title="Request"
+				visible="{= (${ctx>/isForwarding} !==undefined &amp;&amp; ${ctx>/isForwarding} === true &amp;&amp; ${ctx>/isForwardingToRequester} !==undefined &amp;&amp; ${ctx>/isForwardingToRequester} ===true)}">
+				<subSections>
+					<ObjectPageSubSection >
+						<form:SimpleForm title="Request start" editable="true" maxContainerCols="1" columnsL="1" columnsXL="1" layout="ResponsiveGridLayout">
+							<m:Label text="Enable edit mode"/>
+							<m:Button id="btnEdit" width="15%" text="Edit" press="onEditPressed"/>
+							<m:Label text="Title" required="false"/>
+							<m:Input id="shorttext" value="{ctx>/ShortText}" enabled="{= (${lcl>/isEditMode} ===true)}" visible="true"/>
+							<!--<m:Label text="Short Text" required="false"/>-->
+							<!--<m:Input id="shorttextinput" value="{ctx>/ShortText}" placeholder="Please enter short text"/>-->
+							<m:Label text="Requester" required="false"/>
+							<m:Text text="{ctx>/requesterName}"/>
+							<m:Label text="Requester email" required="true"/>
+							<m:Input value="{pur>/requesterEmail}" visible="false"/>
+							<m:Label text="Legal entity" required="true"/>
+							<m:Select id="legalEntityComboBoxWF" selectedKey="{ctx>/legalEntity}" forceSelection="false" enabled="{lcl>/isEditMode}"
+								showSecondaryValues="true" items="{ path: 'test>/LegalEntity', sorter: { path: 'CompanyCodeName' }, length: '100000'}"
+								change="onSelectLegalEntity">
+								<core:ListItem key="{test>CompanyCode}" text="{test>CompanyCodeName}" additionalText="{test>CompanyCode}"/>
+							</m:Select>
+							<m:Label text="Cost Center" required="true" visible="{= (${lcl>/isEditMode} !==true)}"/>
+							<m:Input value="{ctx>/costCenterDisplayName}" visible="{= (${lcl>/isEditMode} !==true)}" enabled="false"/>
+							<m:Label text="Cost Center" required="true" visible="{= (${lcl>/isEditMode} ===true)}"/>
+							<m:Select id="costCenterComboBoxWF" visible="{= (${lcl>/isEditMode} ===true)}" selectedKey="{ctx>/costCenter}" enabled="{lcl>/isEditMode}"
+								forceSelection="false" showSecondaryValues="true" change="onSelectCostCenter">
+								<core:ListItem key="{test>CostCenter}" text="{test>CostCenterName}" additionalText="{test>CostCenter}"/>
+							</m:Select>
+							<m:Label text="Purchasing organization" required="false" visible="{= (${lcl>/isEditMode} !==true)}"/>
+							<m:Input value="{ctx>/purchasingOrgDisplayName}" visible="{= (${lcl>/isEditMode} !==true)}" enabled="false"/>
+							<m:Label text="Purchasing organization" required="false" visible="{= (${lcl>/isEditMode} ===true)}"/>
+							<m:Select id="purchasingOrderComboBoxWF" selectedKey="{ctx>/purchasingOrganization}" visible="{= (${lcl>/isEditMode} ===true)}"
+								showSecondaryValues="true" enabled="false" forceSelection="false" change="onSelectPurchasingOrganization"></m:Select>
+							<m:Label text="Plant" required="true" visible="{= (${lcl>/isEditMode} !==true)}"/>
+							<m:Input value="{ctx>/plantdescription}" visible="{= (${lcl>/isEditMode} !==true)}" enabled="false"/>
+							<m:Label text="Plant" required="true" visible="{= (${lcl>/isEditMode} ===true)}"/>
+							<m:Select id="plantComboBoxWF" visible="{= (${lcl>/isEditMode} ===true)}" selectedKey="{ctx>/plant}" enabled="false" forceSelection="false"
+								showSecondaryValues="true"></m:Select>
+							<m:Label text="Type" required="true"/>
+							<m:RadioButtonGroup select="onTypeChange" id="typeRadioButtonWF" columns="2" editable="{lcl>/isEditMode}" selectedIndex="0">
+								<m:buttons>
+									<m:RadioButton id="OC" text="OPEX" selected="true"/>
+									<m:RadioButton id="IV" text="CAPEX"/>
+								</m:buttons>
+							</m:RadioButtonGroup>
+							<m:Label text="Internal Order " required="true" visible="{= (${lcl>/isEditMode} !==true)}"/>
+							<m:Input value="{ctx>/sInternalOrderDescription}" visible="{= (${lcl>/isEditMode} !==true)}" enabled="false"/>
+							<m:Label text="Internal Order " required="true" visible="{= (${lcl>/isEditMode} ===true)}"/>
+							<m:Input id="internalOrderSelectDialogWF" type="Text" visible="{= (${lcl>/isEditMode} ===true)}" enabled="{lcl>/isEditMode}"
+								value="{ctx>/sInternalOrderDescription}" placeholder="Select an internal order ..." showValueHelp="true" valueHelpOnly="false"
+								showSuggestion="false" valueHelpRequest="handleValueHelpInternalOrder" suggest="handleSuggest"
+								suggestionItemSelected="handleConfirmInternalOrder" width="100%" class="sapUiSmallMarginBottom"
+								suggestionItems="{internalOrders>/internalOrder}">
+								<m:suggestionItems>
+									<core:Item text="{internalOrders>Description}" key="{internalOrders>OrderNumber}"/>
+								</m:suggestionItems>
+							</m:Input>
+							<m:Label text="Requisition type" required="true"/>
+							<m:RadioButtonGroup id="prTypeRadioButtonWF" columns="2" editable="{lcl>/isEditMode}" selectedIndex="0" select="onChangeRequisitionType">
+								<m:buttons>
+									<m:RadioButton id="ZNB" text="Purchase requisition" selected="true"/>
+									<m:RadioButton id="ZOF" text="Framework requisition"/>
+								</m:buttons>
+							</m:RadioButtonGroup>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Delivery address"
+				visible="{= (${ctx>/isForwarding} !==undefined &amp;&amp; ${ctx>/isForwarding} === true &amp;&amp; ${ctx>/isForwardingToRequester} !==undefined &amp;&amp; ${ctx>/isForwardingToRequester} ===true)}">
+				<subSections>
+					<ObjectPageSubSection>
+						<m:VBox class="sapUiSmallMargin">
+							<form:SimpleForm maxContainerCols="1" columnsL="1" columnsXL="1" layout="ResponsiveGridLayout">
+								<form:content>
+									<m:Label text="Name" required="true"/>
+									<m:Input value="{ctx>/Name}" editable="{lcl>/isEditMode}"/>
+									<m:Label text="Name2"/>
+									<m:Input value="{ctx>/Name2}" editable="{lcl>/isEditMode}"/>
+									<m:Label text="Street/No." required="true"/>
+									<m:Input value="{ctx>/Street1}" editable="{lcl>/isEditMode}"/>
+									<m:Input value="{ctx>/HouseNo}" editable="{lcl>/isEditMode}">
+										<m:layoutData>
+											<l:GridData span="XL2 L1 M3 S4"/>
+										</m:layoutData>
+									</m:Input>
+									<m:Label text="ZIP Code/City"/>
+									<m:Input value="{ctx>/PostalCode}" editable="{lcl>/isEditMode}">
+										<m:layoutData>
+											<l:GridData span="XL2 L1 M3 S4"/>
+										</m:layoutData>
+									</m:Input>
+									<m:Input value="{ctx>/City}" required="true" editable="{lcl>/isEditMode}"/>
+									<m:Label text="Country" required="true"/>
+									<m:Input value="{ctx>/CountryName}" maxLength="3" editable="{lcl>/isEditMode}"/>
+								</form:content>
+							</form:SimpleForm>
+						</m:VBox>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Reenter Positions"
+				visible="{= (${ctx>/isForwarding} !==undefined &amp;&amp; ${ctx>/isForwarding} === true &amp;&amp; ${ctx>/isForwardingToRequester} !==undefined &amp;&amp; ${ctx>/isForwardingToRequester} ===true)}">
+				<subSections>
+					<ObjectPageSubSection>
+						<form:SimpleForm maxContainerCols="3" editable="true" layout="ResponsiveGridLayout">
+							<t:Table width="100%" id="positionNumberTableWF" fixedColumnCount="1" editable="{lcl>/isEditMode}" selectionMode="None"
+								rows="{ctx>/position/data}" visibleRowCount="10" enableSelectAll="false" threshold="15" enableBusyIndicator="true" ariaLabelledBy="position">
+								<t:columns>
+									<t:Column width="3rem" hAlign="Center">
+										<m:Label text="Pos"/>
+										<t:template>
+											<m:Text text="{ctx>PositionNum}" textAlign="Right" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="6rem" hAlign="Center">
+										<m:Label text="Description"/>
+										<t:template>
+											<m:Input value="{ctx>Description}" change="onSubmit" maxLength="40"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="10rem" hAlign="Center">
+										<m:Label text="Supplier"/>
+										<t:template>
+											<m:Input id="supplierSelectDialog" type="Text" value="{ctx>SupplierDisplay}" placeholder="Select a supplier ..." showValueHelp="true"
+												valueHelpOnly="true" valueHelpRequest="handleValueHelpSupplier" width="100%"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="10rem" hAlign="Center">
+										<m:Label text="Delivery date"/>
+										<t:template>
+											<!--<m:DatePicker id="deliveryDatePicker" placeholder="Date ..." change="onChangeDatePicker"-->
+											<!--	value="{ path:'ctx>Delivery', type:'sap.ui.model.type.DateTime', constraints: { displayFormat: 'Date' }, formatOptions: { style: 'medium', source: { pattern: 'dd-MM-yyyy' }, strictParsing: true } }"/>-->
+											<m:DatePicker id="deliveryDatePicker" change="onChangeDatePicker" value="{ctx>Delivery}" valueFormat="dd.MM.yyyy" displayFormat="dd.MM.yyyy"
+												placeholder="Delivery Date"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="10rem" hAlign="Center">
+										<m:Label text="G/L Account"/>
+										<t:template>
+											<m:Input id="glAccountSelectDialog" type="Text" value="{ctx>GlAccount}" placeholder="Select a GL/Account ..." showValueHelp="true"
+												valueHelpOnly="true" valueHelpRequest="handleValueHelpGLAccount" width="100%"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="6rem" hAlign="Center">
+										<m:Label text="Quantity"/>
+										<t:template>
+											<m:Input value="{path:'ctx>Quantity', type:'sap.ui.model.type.Float',formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 }}"
+												change="onSubmitUnitPrice"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="10rem" hAlign="Center">
+										<m:Label text="Unit price"/>
+										<t:template>
+											<m:Input value="{path:'ctx>Amount', type:'sap.ui.model.type.Float',formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 }}"
+												change="onSubmitUnitPrice"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="10rem" hAlign="Center">
+										<m:Label text="Total"/>
+										<t:template>
+											<m:Input value=" { path: 'ctx>TotalAmount', formatter: '.formatter.In_en_DE_WithCurrency' }" enabled="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="6rem" hAlign="Center">
+										<m:Label text="Currency"/>
+										<t:template>
+											<m:Select id="currencyComboBox" selectedKey="{ctx>Currency}" forceSelection="false" enabled="true" change="onChangeCurrency"
+												items="{ path: 'currency>/currencies', sorter: { path: 'Currency' } }">
+												<core:ListItem key="{currency>Currency}" text="{currency>Currency}"/>
+											</m:Select>
+										</t:template>
+									</t:Column>
+									<t:Column width="6rem" hAlign="Center">
+										<m:Label text="UoM"/>
+										<t:template>
+											<m:Select id="uomComboBox" selectedKey="{ctx>UnitMeasure}" forceSelection="false" enabled="true" change="onChangeUoM"
+												items="{ path: 'unitMeasure>/unitMeasures', sorter: { path: 'UnitText' } }">
+												<core:ListItem key="{unitMeasure>UnitMeasure}" text="{unitMeasure>UnitText}"/>
+											</m:Select>
+										</t:template>
+									</t:Column>
+									<t:Column width="3rem" hAlign="Center" visible="true">
+										<t:template>
+											<m:Button id="btnDelete" press="onDeleteRow" icon="sap-icon://delete"/>
+										</t:template>
+									</t:Column>
+								</t:columns>
+								<t:footer>
+									<m:OverflowToolbar width="100%">
+										<m:ToolbarSpacer/>
+										<m:Button id="calculate" text="Calculate Total" press="onPressCalculateTotal"/>
+									</m:OverflowToolbar>
+								</t:footer>
+							</t:Table>
+							<m:Label text="Net price total this year" required="false"/>
+							<m:Text text="{ path: 'ctx>/requestedBudgetThisYear', formatter: '.formatter.In_en_DE_WithCurrency' } {ctx>/currencyCode}"/>
+							<!--<m:Text text="{ctx>/requestedBudgetThisYear} {ctx>/currencyCode}"/> -->
+							<m:Label text="Net price total next year" required="false"/>
+							<m:Text text="{ path: 'ctx>/requestedBudgetNextYear', formatter: '.formatter.In_en_DE_WithCurrency' } {ctx>/currencyCode}"/>
+							<!--	<m:Text text="{ctx>/requestedBudgetNextYear} {ctx>/currencyCode}" />-->
+							<m:Label text="Net price total in CoCode currency" required="false"/>
+							<m:Text text="{ path: 'ctx>/sumAmountInCompCurrencyCode', formatter: '.formatter.In_en_DE_WithCurrency' } {ctx>/currencyCode}"/>
+							<!--	<m:Text text="{ctx>/sumAmountInCompCurrencyCode} {ctx>/currencyCode}" /> -->
+							<!--<m:Label text="Requisition type" required="true"/>-->
+							<!--	<m:RadioButtonGroup id="prTypeRadioButtonWF" columns="2" editable="true" selectedIndex="0" enabled="false" select="onChangeRequisitionType">-->
+							<!--	<m:buttons>-->
+							<!--		<m:RadioButton id="ZNB" text="Purchase requisition" selected="true"/>-->
+							<!--		<m:RadioButton id="ZOF" text="Framework requisition"/>-->
+							<!--	</m:buttons>-->
+							<!--</m:RadioButtonGroup>-->
+							<!--						<m:Label text="CER Number(mandatory) and comments" required="false"/>
+						<m:TextArea id="commentTextAreaWF" rows="5" value="{ctx>/requesterComment}" enabled="true" placeholder="Please enter your comment ..."/>
+-->
+							<!--						<m:Label text="External comment" required="false"/>
+						<m:TextArea id="extCommentTextAreaWF" rows="5" value="{ctx>/externalComment}" enabled="true" placeholder="Please enter your comment ..."/> -->
+							<m:Label text="Select Invoice Approver" required="true"/>
+							<m:Select id="invoiceApproverComboBoxWF" selectedKey="{ctx>/invoiceApprover}" forceSelection="false" showSecondaryValues="true"
+								enabled="true" items="{ path: 'InvoiceapproversModel>/invoiceapprovers', sorter: { path: 'FirstName' }, length: '100000' }">
+								<core:ListItem key="{InvoiceapproversModel>Zwfdomain1}" text="{InvoiceapproversModel>FirstName} {InvoiceapproversModel>SecondName}"
+									additionalText="{InvoiceapproversModel>Zwfrole1}"/>
+							</m:Select>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Approvers"
+				visible="{= (${ctx>/isForwarding} !==undefined &amp;&amp; ${ctx>/isForwarding} === true &amp;&amp; ${ctx>/isForwardingToRequester} !==undefined &amp;&amp; ${ctx>/isForwardingToRequester} ===true)}">
+				<subSections>
+					<ObjectPageSubSection >
+						<form:SimpleForm editable="false" layout="ResponsiveGridLayout" width="100%">
+							<core:Title text="Select approvers"/>
+							<m:FlexBox height="100px" alignItems="Start" justifyContent="End">
+								<m:items>
+									<m:Button id="showQuickView" tooltip="Budget info" class="sapUiTinyMarginBottom" icon="sap-icon://hint" press="onOpenInfo"/>
+									<m:Button id="clearApproverSelection" class="sapUiTinyMarginBottom" text="Clear appr. selection" enabled="{ctx>/edit}" press="onClearApproverSelection"/>
+								</m:items>
+							</m:FlexBox>
+							<m:Label text="PJM" required="false"/>
+							<m:Select id="pjmComboBox" selectedKey="{ctx>/approverpjm}" forceSelection="false" enabled="{fieldEnable>/PJM}" change="onSelectPjm"
+								items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'PJM' }, length: '100000' }">
+								<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+							</m:Select>
+							<m:Label text="HOD / Associate Director" required="false"/>
+							<m:Select id="hodComboBox" selectedKey="{ctx>/approverhod}" forceSelection="false" enabled="{fieldEnable>/NONPJM}" change="onSelectHod"
+								items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'HOD' }, length: '100000' }">
+								<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+							</m:Select>
+							<m:Label text="Director / Associate VP" required="false"/>
+							<m:Select id="directorComboBox" selectedKey="{ctx>/approverdirector}" forceSelection="false" enabled="{fieldEnable>/NONPJM}"
+								change="onSelectDirector"
+								items="{ path: 'approvers>/approvers', filters: { path : 'Zwfrole1', operator : 'EQ', value1 : 'DIRECTOR' }, sorter: { path: 'FirstName' }, length: '100000' }">
+								<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+							</m:Select>
+							<m:Label text="VP" required="false"/>
+							<m:Select id="vpComboBox" selectedKey="{ctx>/approvervp}" forceSelection="false" enabled="{fieldEnable>/NONPJM}" change="onSelectVp"
+								items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'VP' }, length: '100000' }">
+								<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+							</m:Select>
+							<m:Label text="CFO" required="false"/>
+							<m:Select id="cfoComboBox" selectedKey="{ctx>/approvercfo}" forceSelection="false" enabled="{fieldEnable>/NONPJM}" change="onSelectCfo"
+								items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'CFO' }, length: '100000' }">
+								<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+							</m:Select>
+							<m:Label text="MD1" required="false"/>
+							<m:Select id="md1ComboBox" selectedKey="{ctx>/approvermd1}" forceSelection="false" enabled="{fieldEnable>/NONPJM}" change="onSelectMd1"
+								items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'MD' }, length: '100000' }">
+								<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+							</m:Select>
+							<m:Label text="MD2" required="false"/>
+							<m:Select id="md2ComboBox" selectedKey="{ctx>/approvermd2}" forceSelection="false" enabled="{fieldEnable>/NONPJM}" change="onSelectMd2"
+								items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'MD' }, length: '100000' }">
+								<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+							</m:Select>
+							<m:Label text="CEO" required="false"/>
+							<m:Select id="ceoComboBox" selectedKey="{ctx>/approverceo}" forceSelection="false" enabled="{fieldEnable>/NONPJM}" change="onSelectCeo"
+								items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'CEO' }, length: '100000' }">
+								<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+							</m:Select>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Request"
+				visible="{= (${ctx>/isForwardingToRequester} === undefined || ${ctx>/isForwardingToRequester} === false)}">
+				<subSections>
+					<ObjectPageSubSection >
+						<form:SimpleForm editable="false" layout="ResponsiveGridLayout" width="100%">
+							<m:Label text="Title" required="false"/>
+							<m:Text id="shorttextdisplay" text="{ctx>/ShortText}" visible="true"/>
+							<m:Label text=""/>
+							<m:Text
+								text="Please check, create a purchase order and send the purchase order to vendor. Please inform the requestor, if the supplier contact should be established by the requestor."
+								visible="{ctx>/isIndirectProcurement}"/>
+							<m:Label text="Requisition Number" visible="{ctx>/isIndirectProcurement}"/>
+							<m:Text text="{ctx>/purchaseOrderResult/d/RequisitionNumber}" visible="{ctx>/isIndirectProcurement}"/>
+							<m:Label text="PO requisition was not created due to system error" visible="{ctx>/isIndirectProcurement}"/>
+							<m:Text text="{ctx>/purchaseOrderResult/d/MessageError1}" visible="{ctx>/isIndirectProcurement}"/>
+							<m:Label text="Requester" visible="true"/>
+							<m:Text text="{ctx>/requesterName}" visible="true"/>
+							<m:Label text="Requested amount - current year" visible="{ctx>/isCreateAsset}"/>
+							<!--<m:Text    text="{
+										path: 'ctx>/requestedBudgetThisYear',
+										formatter: '.formatter.numbersIn_en_DE_WithCurrency'
+									}"
+									visible="{ctx>/isCreateAsset}"/>-->
+							<m:Text text="{ path: 'ctx>/requestedBudgetThisYear', formatter: '.formatter.In_en_DE_WithCurrency' } {ctx>/currencyCode}"
+								visible="{ctx>/isCreateAsset}"/>
+							<!--<m:Text text="{ctx>/requestedBudgetThisYear} {ctx>/currencyCode}" visible="{ctx>/isCreateAsset}"/>-->
+							<m:Label text="Requested amount - next year" visible="{ctx>/isCreateAsset}"/>
+							<!--<m:Text text="{
+										path: 'ctx>/requestedBudgetNextYear',
+										formatter: '.formatter.numbersIn_en_DE_WithCurrency'
+									}" visible="{ctx>/isCreateAsset}"/>-->
+							<m:Text text="{ path: 'ctx>/requestedBudgetNextYear', formatter: '.formatter.In_en_DE_WithCurrency' } {ctx>/currencyCode}"
+								visible="{ctx>/isCreateAsset}"/>
+							<!--<m:Text text="{ctx>/requestedBudgetNextYear} {ctx>/currencyCode}" visible="{ctx>/isCreateAsset}"/>-->
+							<m:Label text="Legal Entity" visible="true"/>
+							<m:Text text="{ctx>/legalEntity} - {ctx>/legalEntityDisplayName}" visible="true"/>
+							<m:Label text="Cost Center" visible="true"/>
+							<m:Text text="{ctx>/costCenter} - {ctx>/costCenterDisplayName}" visible="true"/>
+							<m:Label text="Purchase Organization" visible="{ctx>/isIndirectProcurement}"/>
+							<m:Text text="{ctx>/purchasingOrganization} - {ctx>/purchasingOrgDisplayName}" visible="{ctx>/isIndirectProcurement}"/>
+							<m:Label text="Plant" visible="{ctx>/isIndirectProcurement}"/>
+							<m:Text text="{ctx>/plant} - {ctx>/plantdescription}" visible="{ctx>/isIndirectProcurement}"/>
+							<m:Label text="Internal Order" visible="true"/>
+							<m:Text text="{ctx>/sInternalOrder} - {ctx>/sInternalOrderDescription}" visible="true"/>
+							<m:Label text="Requisition Type" visible="true"/>
+							<m:Text text="{ctx>/prTypeDisplay}" visible="true"/>
+							<m:Label text="Type"/>
+							<m:Text text="{ctx>/typeDisplay}"/>
+							<m:Label text="Total Amount" visible="{ctx>/isIndirectProcurement}"/>
+							<m:Text text="{ctx>/requestedBudgetFormattedMail}" visible="{ctx>/isIndirectProcurement}"/>
+							<!--<m:Label text="Requester" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Text text="{ctx>/requesterName}" visible="{ctx>/isCreateAsset}"/> -->
+							<!--<m:Label text="Requested amount - current year" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Text text="{-->
+							<!--			path: 'ctx>/requestedBudgetThisYear',-->
+							<!--			formatter: '.formatter.numbersIn_en_DE_WithCurrency'-->
+							<!--		}"-->
+							<!--		visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Label text="Requested amount - next year" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Text text="{-->
+							<!--			path: 'ctx>/requestedBudgetNextYear',-->
+							<!--			formatter: '.formatter.numbersIn_en_DE_WithCurrency'-->
+							<!--		}" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Label text="Cost Center" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Text text="{ctx>/costCenter} - {ctx>/costCenterDisplayName}" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Label text="Internal Order Number" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Text text="{ctx>/sInternalOrder} - {ctx>/sInternalOrderDescription}" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Label text="Legal entity" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Text text="{ctx>/legalEntity} - {ctx>/legalEntityDisplayName}" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Label text="Requisition type" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Text text="{ctx>/prTypeDisplay}" visible="{ctx>/isCreateAsset}"/>-->
+							<!--<m:Label text="Type" />-->
+							<!--<m:Text text="{ctx>/typeDisplay}"/>-->
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Positions"
+				visible="{= (${ctx>/isForwardingToRequester} === undefined || ${ctx>/isForwardingToRequester} === false)}">
+				<subSections>
+					<ObjectPageSubSection>
+						<form:SimpleForm maxContainerCols="3" editable="true" layout="ResponsiveGridLayout">
+							<t:Table id="positionNumberTable" selectionMode="None" rows="{ctx>/position/data}" visibleRowCount="10" enableSelectAll="false"
+								threshold="15" enableBusyIndicator="true" ariaLabelledBy="position">
+								<t:columns>
+									<t:Column width="50%" hAlign="Center">
+										<m:Label text="Pos"/>
+										<t:template>
+											<m:Text textAlign="Right" text="{ctx>PositionNum}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="100%" hAlign="Center">
+										<m:Label text="Description"/>
+										<t:template>
+											<m:Text text="{ctx>Description}"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="100%" hAlign="Center">
+										<m:Label text="Supplier"/>
+										<t:template>
+											<!--<m:Text text="{ctx>SupplierDisplay}"/>-->
+											<m:Text text="{parts :['ctx>Supplier', 'ctx>SupplierDisplay'], formatter: '.formatter.formatBlank' }"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="110%" hAlign="Center">
+										<m:Label text="Delivery date"/>
+										<t:template>
+											<m:Text text="{ctx>Delivery}"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="110%" hAlign="Center">
+										<m:Label text="G/L Account"/>
+										<t:template>
+											<!--<m:Text text="{ctx>GlAccount}"/>-->
+											<m:Text text="{parts :['ctx>GlAccount', 'ctx>GlAccountDisplay'], formatter: '.formatter.formatBlank' } "/>
+										</t:template>
+									</t:Column>
+									<t:Column width="80%" hAlign="Center">
+										<m:Label text="Quantity"/>
+										<t:template>
+											<m:Text textAlign="Right" text="{path : 'ctx>Quantity', formatter: '.formatter.currencyWithoutSymbol'}"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="110%" hAlign="Center">
+										<m:Label text="Unit price"/>
+										<t:template>
+											<m:Text textAlign="Right" text="{path: 'ctx>Amount', formatter: '.formatter.currencyWithoutSymbol'}"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="110%" hAlign="Center">
+										<m:Label text="Total"/>
+										<t:template>
+											<m:Text textAlign="Right" text="{path: 'ctx>TotalAmount', formatter: '.formatter.currencyWithoutSymbol'}"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="50%" hAlign="Center">
+										<m:Label text="Currency"/>
+										<t:template>
+											<m:Text text="{ctx>Currency}"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="80%" hAlign="Center">
+										<m:Label text="UoM"/>
+										<t:template>
+											<m:Text text="{ctx>UnitDisplay}"/>
+										</t:template>
+									</t:Column>
+								</t:columns>
+							</t:Table>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<!--<ObjectPageSection title="Actual budget status" visible="{ctx>/isCreateAsset}">-->
+			<ObjectPageSection title="Actual budget status" visible="{= (${ctx>/isCreateAsset} ===true || ${ctx>/isIndirectProcurement})}">
+				<subSections>
+					<ObjectPageSubSection>
+						<form:SimpleForm maxContainerCols="3" editable="true" layout="ResponsiveGridLayout">
+							<t:Table id="changeSupplementTable" selectionMode="None" visibleRowCount="2" threshold="15" enableBusyIndicator="true"
+								ariaLabelledBy="FiscalYear" rows="{ctx>/budgets/d/results}">
+								<!--rows="{ctx>/budgets/d/results}"-->
+								<t:columns>
+									<t:Column width="100%" hAlign="Right">
+										<m:Label text="Fiscal year"/>
+										<t:template>
+											<m:Text text="{test>FiscalYear}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="100%" hAlign="Right">
+										<m:Label text="Plan Vers.0"/>
+										<t:template>
+											<m:Text textAlign="Right" text="{path: 'test>PlanVersion0', formatter: '.formatter.In_en_DE_WithCurrency'} {ctx>/currencyCode}"
+												wrapping="false"/>
+											<!--<m:Text textAlign="Right" text="{test>PlanVersion0} {ctx>/currencyCode}"
+											wrapping="false"/>-->
+										</t:template>
+									</t:Column>
+									<t:Column width="100%" hAlign="Right">
+										<m:Label text="Plan Vers.1"/>
+										<t:template>
+											<!--<m:Text text="{ctx>PlanVersion1}" wrapping="false"/>-->
+											<m:Text textAlign="Right" text="{path: 'test>PlanVersion1', formatter: '.formatter.In_en_DE_WithCurrency'} {ctx>/currencyCode}"/>
+											<!--<m:Text textAlign="Right" text="{test>PlanVersion1} {ctx>/currencyCode}"/>	-->
+										</t:template>
+									</t:Column>
+									<t:Column width="100%" hAlign="Right">
+										<m:Label text="Budget"/>
+										<t:template>
+											<m:Text textAlign="Right" text="{path: 'test>Budget', formatter: '.formatter.In_en_DE_WithCurrency'} {ctx>/currencyCode}"/>
+											<!-- <m:Text textAlign="Right" text="{test>Budget} {ctx>/currencyCode}"/>-->
+											<!--	<m:Text text="{ctx>Budget}" wrapping="false"/>-->
+										</t:template>
+									</t:Column>
+									<!--									<t:Column width="8rem">
+										<m:Label text="Actual"/>
+										<t:template>
+											<m:Text text="{ctx>Actual}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column width="8rem">
+										<m:Label text="Commitment"/>
+										<t:template>
+											<m:Text text="{ctx>Commitment}" wrapping="false"/>
+										</t:template>
+									</t:Column>-->
+									<t:Column width="100%" hAlign="Right">
+										<m:Label text="Allotted"/>
+										<t:template>
+											<m:Text textAlign="Right" text="{path: 'test>Allotted', formatter: '.formatter.In_en_DE_WithCurrency'} {ctx>/currencyCode}"/>
+											<!--	<m:Text textAlign="Right" text="{test>Allotted} {ctx>/currencyCode}"/>	-->
+											<!--	<m:Text text="{ctx>Allotted}" wrapping="false"/>-->
+										</t:template>
+									</t:Column>
+									<t:Column width="100%" hAlign="Right">
+										<m:Label text="Available BDG"/>
+										<t:template>
+											<m:Text textAlign="Right" text="{path: 'test>Available', formatter: '.formatter.In_en_DE_WithCurrency'} {ctx>/currencyCode}"/>
+											<!--	<m:Text textAlign="Right" text="{test>Available} {ctx>/currencyCode}"/>-->
+											<!--m:Text text="{ctx>Available}" wrapping="false"/>-->
+										</t:template>
+									</t:Column>
+								</t:columns>
+							</t:Table>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Provide purchase order account details" visible="{ctx>/showAccountDetails}">
+				<subSections>
+					<ObjectPageSubSection >
+						<form:SimpleForm maxContainerCols="3" editable="true" layout="ResponsiveGridLayout">
+							<!--<t:Table id="assetTable" selectionMode="None" rows="{ path: 'ctx>/PurchaseRequisition/to_PurchaseItem', events: { dataReceived: 'onAssetDataReceived' } }" visibleRowCount="10" enableSelectAll="false"-->
+							<t:Table id="assetTable" selectionMode="None" rows="{ path: 'ctx>/PurchaseRequisition/to_PurchaseItem'}" visibleRowCount="10"
+								enableSelectAll="false" threshold="15" enableBusyIndicator="true" ariaLabelledBy="position" width="50%">
+								<t:columns>
+									<t:Column width="3rem" hAlign="Right">
+										<m:Label text="Pos"/>
+										<t:template>
+											<m:Text textAlign="Right" text="{ctx>PositionNum}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column hAlign="Right">
+										<m:Label text="Asset Number"/>
+										<t:template>
+											<!--modelContextChange="onAssetNumberDataChange"-->
+											<m:Input id="internalOrderSelectDialog" type="Text" value="{ctx>AssetNumber}" placeholder="Select an Asset number ..." showValueHelp="true"
+												valueHelpOnly="true" valueHelpRequest="handleValueHelpAsset" width="100%"/>
+											<!--				<m:Select id="supplierComboBox" selectedKey="{ctx>AssetNumber}" forceSelection="false" enabled="true" showSecondaryValues="true"
+												change="onChange" items="{ path: 'ctx>/assetNumbers/d/results', sorter: { path: 'AssetDescription'}, length: '1000000' }">
+												<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>MainAssetNumber}" additionalText="{ctx>AssetDescription}"/>
+											</m:Select>
+							-->
+										</t:template>
+									</t:Column>
+									<t:Column hAlign="Right">
+										<m:Label text="Sub Asset Number"/>
+										<t:template>
+											<m:Input id="subassetnumber" type="Text" value="{ctx>SubAssetNumber}" placeholder="Sub Asset number" showValueHelp="false"
+												valueHelpOnly="false" enabled="false" width="100%"/>
+										</t:template>
+									</t:Column>
+								</t:columns>
+							</t:Table>
+							<m:Label text=""/>
+							<m:Button id="btnRefreshAssets" width="16%" text="Refresh" press="onRefreshAssetsPressed"/>
+							<!--							
+						<m:Label text="PO account assignment type" required="false"/>
+						<m:Select id="POTypeComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/poType}"
+								     	items="{ path: 'ctx>/accountAssignments/d/results',
+								     	sorter: { path: 'Description' }}">
+									<core:ListItem key="{ctx>AssignmentCategory}" text="{ctx>Description}"/>
+						</m:Select>
+						<m:Label text="Asset number/Subnumber Pos.1" required="false"/>
+						<m:Select id="an1ComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/assetNumber1}"
+								     	items="{ path: 'ctx>/assetNumbers/d/results',
+								     	sorter: { path: 'AssetDescription' }}">
+							<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>AssetDescription}"/>
+						</m:Select>
+						<m:Label text="Asset number/Subnumber Pos.2" required="false"/>
+						<m:Select id="an2ComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/assetNumber2}"
+								     	items="{ path: 'ctx>/assetNumbers/d/results',
+								     	sorter: { path: 'AssetDescription' }}">
+							<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>AssetDescription}"/>
+						</m:Select>
+						<m:Label text="Asset number/Subnumber Pos.3" required="false"/>
+						<m:Select id="an3ComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/assetNumber3}"
+								     	items="{ path: 'ctx>/assetNumbers/d/results',
+								     	sorter: { path: 'AssetDescription' }}">
+							<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>AssetDescription}"/>
+						</m:Select>
+						<m:Label text="Asset number/Subnumber Pos.4" required="false"/>
+						<m:Select id="a41ComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/assetNumber4}"
+								     	items="{ path: 'ctx>/assetNumbers/d/results',
+								     	sorter: { path: 'AssetDescription' }}">
+							<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>AssetDescription}"/>
+						</m:Select>
+						<m:Label text="Asset number/Subnumber Pos.5" required="false"/>
+						<m:Select id="an5ComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/assetNumber5}"
+								     	items="{ path: 'ctx>/assetNumbers/d/results',
+								     	sorter: { path: 'AssetDescription' }}">
+							<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>AssetDescription}"/>
+						</m:Select>
+						<m:Label text="Asset number/Subnumber Pos.6" required="false"/>
+							<m:Select id="an6ComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/assetNumber6}"
+								     	items="{ path: 'ctx>/assetNumbers/d/results',
+								     	sorter: { path: 'AssetDescription' }}">
+							<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>AssetDescription}"/>
+						</m:Select>
+						<m:Label text="Asset number/Subnumber Pos.7" required="false"/>
+						<m:Select id="an7ComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/assetNumber7}"
+								     	items="{ path: 'ctx>/assetNumbers/d/results',
+								     	sorter: { path: 'AssetDescription' }}">
+							<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>AssetDescription}"/>
+						</m:Select>
+						<m:Label text="Asset number/Subnumber Pos.8" required="false"/>
+						<m:Select id="an8ComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/assetNumber8}"
+								     	items="{ path: 'ctx>/assetNumbers/d/results',
+								     	sorter: { path: 'AssetDescription' }}">
+							<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>AssetDescription}"/>
+						</m:Select>
+						<m:Label text="Asset number/Subnumber Pos.9" required="false"/>
+						<m:Select id="an9ComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/assetNumber9}"
+								     	items="{ path: 'ctx>/assetNumbers/d/results',
+								     	sorter: { path: 'AssetDescription' }}">
+							<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>AssetDescription}"/>
+						</m:Select>
+						<m:Label text="Asset number/Subnumber Pos.10" required="false"/>
+						<m:Select id="an10ComboBox" visible="true" forceSelection="false" change="onSelectPOType" selectedKey="{ctx>/assetNumber10}"
+								     	items="{ path: 'ctx>/assetNumbers/d/results',
+								     	sorter: { path: 'AssetDescription' }}">
+							<core:ListItem key="{ctx>MainAssetNumber}" text="{ctx>AssetDescription}"/>
+						</m:Select>
+-->
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Files" visible="false">
+				<subSections>
+					<ObjectPageSubSection>
+						<m:UploadCollection multiple="true" uploadEnabled="true" uploadUrl="/cmis/f5a38c2a8390708cff3cb6c5/root">
+							<m:items>
+								<m:UploadCollectionItem fileName="{fileName}" mimeType="{mimeType}" thumbnailUrl="{thumbnailUrl}" url="{url}">
+									<m:attributes>
+										<m:ObjectAttribute title="{title}" text="{text}" active="{active}"/>
+									</m:attributes>
+									<m:statuses>
+										<m:ObjectStatus title="{title}" text="{text}" state="{state}"/>
+									</m:statuses>
+								</m:UploadCollectionItem>
+							</m:items>
+						</m:UploadCollection>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Approvers"
+				visible="{= (${ctx>/isCreateAsset} ===true &amp;&amp; ${ctx>/isForwardingToRequester} === undefined || ${ctx>/isForwardingToRequester} === false)}">
+				<subSections>
+					<ObjectPageSubSection>
+						<form:SimpleForm maxContainerCols="3" editable="true" layout="ResponsiveGridLayout">
+							<form:content>
+								<m:Label text="PJM"/>
+								<m:Text text="{ctx>/PJMApproverDisplay}"/>
+								<m:Label text="HOD"/>
+								<m:Text text="{ctx>/HODApproverDisplay}"/>
+								<m:Label text="Director"/>
+								<m:Text text="{ctx>/DirectorApproverDisplay}"/>
+								<m:Label text="VP Function"/>
+								<m:Text text="{ctx>/VPApproverDisplay}"/>
+								<m:Label text="CFO"/>
+								<m:Text text="{ctx>/CFOApproverDisplay}"/>
+								<m:Label text="MD1"/>
+								<m:Text text="{ctx>/MD1ApproverDisplay}"/>
+								<m:Label text="MD2"/>
+								<m:Text text="{ctx>/MD2ApproverDisplay}"/>
+								<m:Label text="CEO"/>
+								<m:Text text="{ctx>/CEOApproverDisplay}"/>
+							</form:content>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<!--			<ObjectPageSection title="Purchase">
+				<subSections>
+					<ObjectPageSubSection>
+	<m:VBox class="sapUiSmallMargin">
+		<form:SimpleForm id="SimpleFormDisplay354wideDual"
+			editable="false"
+			layout="ResponsiveGridLayout"
+			title="Address"
+			labelSpanXL="4"
+			labelSpanL="3"
+			labelSpanM="4"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="0"
+			emptySpanL="4"
+			emptySpanM="0"
+			emptySpanS="0"
+			columnsXL="2"
+			columnsL="1"
+			columnsM="1"
+			singleContainerFullSize="false" >
+			<form:content>
+				<core:Title text="Office" />
+				<m:Label text="Full name of the contact" />
+				<m:Text id="nameText" text="{SupplierName}" />
+				<m:Label text="Street and number where the contact is located" />
+				<m:Text text="{Street} {HouseNumber}" />
+				<m:Label text="ZIP Code and City" />
+				<m:Text text="{ZIPCode} {City}" />
+				<m:Label text="Country where the contact is located" />
+				<m:Text id="countryText" text="{Country}" />
+				<core:Title text="Online" />
+				<m:Label text="Web page of the contact" />
+				<m:Text text="{Url}" />
+				<m:Label text="Twitter account of the contact" />
+				<m:Text text="{Twitter}" />
+			</form:content>
+		</form:SimpleForm>
+	</m:VBox>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+			<ObjectPageSection title="Approvals">
+				<subSections>
+					<ObjectPageSubSection>
+						<form:SimpleForm maxContainerCols="3" editable="false" layout="ResponsiveGridLayout">
+							<form:content>
+								<m:Label text="Lead"/>
+								<m:Text text="{/approvers/lead}"/>
+								<m:Label text="Director"/>
+								<m:Text text="{/approvers/director}"/>
+								<m:Label text="Head of Department"/>
+								<m:Text text="{/approvers/headOfDepartment}"/>
+								<m:Label text="VP"/>
+								<m:Text text="{/approvers/vp}"/>
+								<m:Label text="CFO"/>
+								<m:Text text="{/approvers/cfo}"/>
+							</form:content>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+-->
+			<ObjectPageSection title="Comments">
+				<subSections>
+					<ObjectPageSubSection>
+						<form:SimpleForm editable="false" layout="ResponsiveGridLayout" width="100%">
+							<m:Label text="External comment" required="false"/>
+							<m:Text id="extCommentTextArea" text="{ctx>/externalComment}"/>
+							<m:Label text="Your comment"/>
+							<m:TextArea rows="5" id="commentTextArea" value="{ctx>/comment}" placeholder="Please enter your comment ..."/>
+							<m:Label text="Comments"/>
+							<m:Text text="{ctx>/sCommentHistory}"/>
+						</form:SimpleForm>
+					
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Approved Budget" visible="{= (${ctx>/isForwardingToRequester} === undefined || ${ctx>/isForwardingToRequester} === false)}" >
+				<subSections>
+					<ObjectPageSubSection>
+						<form:SimpleForm editable="false" layout="ResponsiveGridLayout" width="100%">
+							<m:Label text="Selected approved BR"/>
+						    <m:Link text="{ctx>/bRTitle}" press="onClickofBReq"/>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Approved Budget" visible="{= (${ctx>/isForwarding} !==undefined &amp;&amp; ${ctx>/isForwarding} === true &amp;&amp; ${ctx>/isForwardingToRequester} !==undefined &amp;&amp; ${ctx>/isForwardingToRequester} ===true)}" >
+				<subSections>
+					<ObjectPageSubSection>
+						<form:SimpleForm editable="false" layout="ResponsiveGridLayout" width="100%">
+							<m:Label text="Selected approved BR"/>
+						    <m:Link text="{ctx>/bRTitle}" press="onClickofBReq"/>
+						    <m:Label id="idLAB" text="List of already approved BR" required="false" visible="true"/>
+					        <m:Button id="idSBL" text="Budget List" press="_onBudgetListPress" visible="true"/>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="Files">
+				<subSections>
+					<ObjectPageSubSection>
+						<!--<form:SimpleForm editable="false" layout="ResponsiveGridLayout" width="100%">-->
+						<!--	<m:Label text="Approved Budget Request"/>-->
+						<!--	<m:Button text="List of already approved BR" press="_onBudgetListPress"/>-->
+						<!--</form:SimpleForm>-->
+						<m:UploadCollection id="UploadCollection" multiple="false" uploadEnabled="true"
+							items="{path : 'filebucketservice>/_TODO_/Files', model: 'filebucketservice',templateShareable : 'true'}"
+							uploadUrl="/sap/fiori/cerpurchaseapprove/filebucketservice/upload" numberOfAttachmentsText=" " fileDeleted="onFileDelete"
+							beforeUploadStarts="onBeforeUploadStarts" uploadComplete="onUploadComplete">
+							<m:items>
+								<m:UploadCollectionItem documentId="{filebucketservice>Id}" visibleEdit="false" fileName="{filebucketservice>Name}"
+									mimeType="{filebucketservice>MimeType}" thumbnailUrl="{filebucketservice>thumbnailUrl}"
+									url="https://cerrepoaccessbi0brchgc3.eu2.hana.ondemand.com/FileBucketProvider/get?id={filebucketservice>Id}">
+									<m:attributes>
+										<!-- tw72h2gxnz bi0brchgc3 -->
+										<m:ObjectAttribute title="{title}" text="{text}" active="{active}"/>
+									</m:attributes>
+									<m:statuses>
+										<m:ObjectStatus title="{title}" text="{text}" state="{state}"/>
+									</m:statuses>
+								</m:UploadCollectionItem>
+							</m:items>
+						</m:UploadCollection>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<!--<ObjectPageSection title="Approved Budget" 	visible="true">-->
+			<!--	<subSections>-->
+			<!--		<ObjectPageSubSection>-->
+			<!--			<form:SimpleForm editable="false" layout="ResponsiveGridLayout" width="100%">-->
+			<!--				<m:Label text="Select user to forward to"/>-->
+			<!--			    <m:Button text="List of already approved BR" press="_onBudgetListPress"/>-->
+			<!--			</form:SimpleForm>-->
+			<!--		</ObjectPageSubSection>-->
+			<!--	</subSections>-->
+			<!--</ObjectPageSection>-->
+			<ObjectPageSection title="Forwarding" visible="{= (${ctx>/isCreateAsset} ===true &amp;&amp; ${ctx>/workflowStep} !== 0)}">
+				<subSections>
+					<ObjectPageSubSection>
+						<form:SimpleForm editable="false" layout="ResponsiveGridLayout" width="100%">
+							<m:Label text="Select user to forward to"/>
+							<m:Select id="forwardingComboBox" forceSelection="false" change="onSelectForwarding" selectedKey="{ctx>/forwardedToApprover}"
+								showSecondaryValues="true" items="{path:'ctx>/aForwardingUsersDisplay', length: '100000'}">
+								<!--filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'VP' } }">-->
+								<core:ListItem key="{ctx>Zwfdomain1}" text="{ctx>Name}" additionalText="{ctx>Role}"/>
+							</m:Select>
+						</form:SimpleForm>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+		</sections>
+	</ObjectPageLayout>
+</mvc:View>

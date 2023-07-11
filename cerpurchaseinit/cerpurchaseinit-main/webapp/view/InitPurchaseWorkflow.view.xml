@@ -1,0 +1,397 @@
+<mvc:View controllerName="gb.wf.cer.purchase.init.controller.InitPurchaseWorkflow" displayBlock="true" xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:layout="sap.ui.layout" xmlns:t="sap.ui.table">
+	<App id="idAppControl">
+		<Page class="sapUiContentPadding" title="Purchase Order Request">
+			<f:SimpleForm title="Request Start" editable="true" maxContainerCols="1" columnsL="1" columnsXL="1" layout="ResponsiveGridLayout">
+				<Label text="Title" required="false"/>
+				<Input id="shorttext" value="{pur>/ShortText}" placeholder="Please enter short text"/>
+				<Label text="Requester" required="false"/>
+				<Text text="{pur>/requesterName}"/>
+				<!--<Input value="{pur>/requester}"></Input>-->
+				<Label text="Requester Email" required="true"/>
+				<Input value="{pur>/requesterEmail}" visible="false"/>
+				<Label text="Legal Entity" required="true"/>
+				<Select id="legalEntityComboBox" selectedKey="{pur>/legalEntity}" forceSelection="false" showSecondaryValues="true"
+					items="{ path: '/LegalEntity', sorter: { path: 'CompanyCodeName' }, length: '100000'}" change="onSelectLegalEntity">
+					<core:ListItem key="{CompanyCode}" text="{CompanyCodeName}" additionalText="{CompanyCode}"/>
+				</Select>
+				<Label text="Cost Center" required="true"/>
+				<Select id="costCenterComboBox" selectedKey="{pur>/costCenter}" enabled="false" forceSelection="false" showSecondaryValues="true"
+					change="onSelectCostCenter"></Select>
+				<Label text="Purchasing Organization" required="false"/>
+				<Select id="purchasingOrderComboBox" selectedKey="{pur>/purchasingOrganization}" showSecondaryValues="true" enabled="false"
+					forceSelection="false" change="onSelectPurchasingOrganization"></Select>
+				<Label text="Plant" required="true"/>
+				<Select id="plantComboBox" selectedKey="{pur>/plant}" enabled="false" forceSelection="false" showSecondaryValues="true"
+					change="onSelectPlant"></Select>
+				<Label text="Type" required="true"/>
+				<RadioButtonGroup select="onTypeChange" id="typeRadioButton" columns="2" editable="true" selectedIndex="0">
+					<buttons>
+						<RadioButton id="OC" text="OPEX" selected="true"/>
+						<RadioButton id="IV" text="CAPEX"/>
+					</buttons>
+				</RadioButtonGroup>
+				<Label text="Internal Order " required="true"/>
+				<Input id="internalOrderSelectDialog" type="Text" value="{pur>/sInternalOrderDescription}" placeholder="Select an internal order ..."
+					showValueHelp="true" valueHelpOnly="false" showSuggestion="false" valueHelpRequest="handleValueHelpInternalOrder" suggest="handleSuggest"
+					suggestionItemSelected="handleConfirmInternalOrder" width="100%" class="sapUiSmallMarginBottom" suggestionItems="{/InternalOrder}">
+					<suggestionItems>
+						<core:Item text="{Description}" key="{OrderNumber}"/>
+					</suggestionItems>
+				</Input>
+				<Label text="Requisition Type" required="true"/>
+				<RadioButtonGroup id="prTypeRadioButton" columns="2" editable="true" selectedIndex="0" enabled="true" select="onChangeRequisitionType">
+					<buttons>
+						<RadioButton id="ZNB" text="Purchase Requisition" selected="true"/>
+						<RadioButton id="ZOF" text="Framework Requisition"/>
+					</buttons>
+				</RadioButtonGroup>
+			</f:SimpleForm>
+			<VBox class="sapUiSmallMargin">
+				<!--	<f:SimpleForm id="SimpleFormDisplay354"
+			editable="false"
+			layout="ResponsiveGridLayout"
+			title="Address"
+			labelSpanXL="3"
+			labelSpanL="3"
+			labelSpanM="3"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="4"
+			emptySpanL="4"
+			emptySpanM="4"
+			emptySpanS="0"
+			columnsXL="1"
+			columnsL="1"
+			columnsM="1"
+			singleContainerFullSize="false" >-->
+				<f:SimpleForm title="Delivery Address" editable="true" maxContainerCols="1" columnsL="1" columnsXL="1" layout="ResponsiveGridLayout">
+					<f:content>
+						<Label text="Name" required="true"/>
+						<Input value="{pur>/Name}" maxLength="40"/>
+						<Label text="Name2"/>
+						<Input value="{pur>/Name2}" maxLength="40"/>
+						<Label text="Street/No." required="true"/>
+						<Input value="{pur>/Street1}" maxLength="30"></Input>
+						<Input value="{pur>/HouseNo}" maxLength="10">
+							<layoutData>
+								<layout:GridData span="XL2 L1 M3 S4"/>
+							</layoutData>
+						</Input>
+						<Label text="ZIP Code/City"/>
+						<Input value="{pur>/PostalCode}" maxLength="10">
+							<layoutData>
+								<layout:GridData span="XL2 L1 M3 S4"/>
+							</layoutData>
+						</Input>
+						<Input value="{pur>/City}" required="true" maxLength="25"/>
+						<Label text="Country" required="true"/>
+						<!--	<Input value="{pur>/CountryName}" maxLength="3"/>-->
+						<Input id="countrySelectDialog" type="Text" value="{pur>/CountryName}" placeholder="Select a country ..." showValueHelp="true"
+							valueHelpOnly="true" showSuggestion="false" valueHelpRequest="handleValueHelpCountryName" suggest="handleSuggest"
+							suggestionItemSelected="handleConfirmCountryName" width="100%" class="sapUiSmallMarginBottom">
+							<suggestionItems>
+								<core:Item text="{LongName}" key="{Country}"/>
+							</suggestionItems>
+						</Input>
+					</f:content>
+				</f:SimpleForm>
+			</VBox>
+			<Label text="Position Number"/>
+			<t:Table id="positionNumberTable" selectionMode="None" rows="{pos>/data}" visibleRowCount="10" enableSelectAll="false" threshold="15"
+				enableBusyIndicator="true" ariaLabelledBy="position">
+				<t:columns>
+					<t:Column width="3rem" hAlign="Right">
+						<Label text="Pos"/>
+						<t:template>
+							<Text textAlign="Right" text="{pos>PositionNum}"/>
+						</t:template>
+					</t:Column>
+					<t:Column >
+						<Label text="Description"/>
+						<t:template>
+							<Input value="{pos>Description}" change="onSubmit" maxLength="40"/>
+						</t:template>
+					</t:Column>
+					<t:Column width="7rem">
+						<Label text="Supplier"/>
+						<t:template>
+							<Input id="supplierSelectDialog" type="Text" value="{pos>SupplierDisplay}" placeholder="Select a supplier ..." showValueHelp="true"
+								valueHelpOnly="true" valueHelpRequest="handleValueHelpSupplier" width="100%"/>
+							<!--class="sapUiSmallMarginBottom"-->
+						</t:template>
+					</t:Column>
+					<t:Column width="9rem">
+						<Label text="Delivery Date"/>
+						<t:template>
+							<DatePicker id="deliveryDatePicker" value="{pos>Delivery}" change="handleChangeDate" valueFormat="dd.MM.yyyy" displayFormat="dd.MM.yyyy"
+								placeholder="Delivery Date"/>
+							<!--<DatePicker id="deliveryDatePicker" placeholder="Date ..." change="onChangeDatePicker"-->
+							<!--	value="{ path:'pos>Delivery', type:'sap.ui.model.type.DateTime', constraints: { displayFormat: 'Date' }, formatOptions: { style: 'medium', source: { pattern: 'yyyy-MM-dd' }, strictParsing: true } }"/>-->
+							<!--class="sapUiSmallMarginBottom"-->
+						</t:template>
+					</t:Column>
+					<t:Column width="10rem">
+						<Label text="G/L Account"/>
+						<t:template>
+							<Input id="glAccountSelectDialog" type="Text" value="{pos>GlAccount}" placeholder="Select a GL/Account ..." showValueHelp="true"
+								valueHelpOnly="true" valueHelpRequest="handleValueHelpGLAccount" width="100%"/>
+							<!--class="sapUiSmallMarginBottom"-->
+						</t:template>
+					</t:Column>
+					<t:Column width="5rem">
+						<Label text="Quantity"/>
+						<t:template>
+							<Input id="quantity"
+								value="{path:'pos>Quantity', type:'sap.ui.model.type.Float',formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 }}"
+								change="onSubmitUnitPrice"/>
+						</t:template>
+					</t:Column>
+					<t:Column width="6rem">
+						<Label text="Unit Price"/>
+						<t:template>
+							<Input id="unitprice"
+								value="{path:'pos>Amount', type:'sap.ui.model.type.Float',formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 }}"
+								change="onSubmitUnitPrice"/>
+						</t:template>
+					</t:Column>
+					<t:Column width="8rem">
+						<Label text="Total"/>
+						<t:template>
+							<!--<Input value="{pos>TotalAmount}" enabled="false"/>-->
+							<Input value=" { path: 'pos>TotalAmount', formatter: '.formatter.In_en_DE_WithCurrency' }" enabled="false"/>
+						</t:template>
+					</t:Column>
+					<t:Column width="7rem">
+						<Label text="Currency"/>
+						<t:template>
+							<Select id="currencyComboBox" selectedKey="{pos>Currency}" forceSelection="false" enabled="true" change="onChangeCurrency"
+								items="{ path: 'currency>/currencies', sorter: { path: 'Currency' }, length: '10000' }">
+								<core:ListItem key="{currency>Currency}" text="{currency>Currency}"/>
+							</Select>
+						</t:template>
+					</t:Column>
+					<t:Column width="6rem">
+						<Label text="UoM"/>
+						<t:template>
+							<Select id="uomComboBox" selectedKey="{pos>UnitMeasure}" forceSelection="false" enabled="true" change="onChangeUoM"
+								items="{ path: 'unitMeasure>/unitMeasures', sorter: { path: 'UnitText' }, length: '10000' }">
+								<core:ListItem key="{unitMeasure>UnitMeasure}" text="{unitMeasure>UnitText}"/>
+							</Select>
+						</t:template>
+					</t:Column>
+					<t:Column width="3rem">
+						<t:template>
+							<Button id="btnDelete" press="onDeleteRow" icon="sap-icon://delete"/>
+						</t:template>
+					</t:Column>
+					<t:Column width="0rem" visible="true">
+						<Label text=""/>
+						<t:template>
+							<Input value="{pos>AssetNumber}"/>
+						</t:template>
+					</t:Column>
+				</t:columns>
+				<t:footer>
+					<OverflowToolbar width="100%">
+						<ToolbarSpacer/>
+						<Button id="calculate" text="Calculate Total" press="onPressCalculateTotal"/>
+					</OverflowToolbar>
+				</t:footer>
+			</t:Table>
+			<f:SimpleForm editable="true" maxContainerCols="1" columnsL="1" columnsXL="1" layout="ResponsiveGridLayout">
+				<!--<Label text="Net price total current year" required="false"/> 
+				<Text text="{
+							path: 'pur>/requestedBudgetThisYear',
+							formatter: '.formatter.numbersIn_en_DE_WithCurrency'
+							} {pur>/compCurrencyCode}"/>-->
+				<Label text="Net price total current year" required="false"/>
+				<Text id="reqBud" text="{ path: 'pur>/requestedBudgetThisYear', formatter: '.formatter.In_en_DE_WithCurrency' } {pur>/compCurrencyCode}"/>
+				<Label text="Net price total next year" required="false"/>
+				<Text id="reqNxt" text="{ path: 'pur>/requestedBudgetNextYear', formatter: '.formatter.In_en_DE_WithCurrency' } {pur>/compCurrencyCode}"/>
+				<Label text="Net price total in CoCode currency" required="false"/>
+				<Text id="reqFinal"
+					text="{ path: 'pur>/sumAmountInCompCurrencyCode', formatter: '.formatter.In_en_DE_WithCurrency' } {pur>/compCurrencyCode}"/>
+				<!--<Label text="Requisition Type" required="true"/>-->
+				<!--<RadioButtonGroup id="prTypeRadioButton" columns="2" editable="true" selectedIndex="0" enabled="true" select="onChangeRequisitionType">-->
+				<!--	<buttons>-->
+				<!--		<RadioButton id="ZNB" text="Purchase Requisition" selected="true"/>-->
+				<!--		<RadioButton id="ZOF" text="Framework Requisition"/>-->
+				<!--	</buttons>-->
+				<!--</RadioButtonGroup>-->
+				<Label text="Internal Comment" required="false"/>
+				<TextArea id="commentTextArea" rows="5" value="{pur>/requesterComment}" enabled="true" placeholder="Please enter your comment ..."></TextArea>
+				<Label text="Comment to Supplier in PO" required="false"/>
+				<TextArea id="extCommentTextArea" rows="5" value="{pur>/externalComment}" enabled="true" placeholder="Please enter your comment ..."></TextArea>
+				<Label text="Select Invoice Approver" required="true"/>
+				<Select id="invoiceApproverComboBox" selectedKey="{pur>/invoiceApprover}" forceSelection="false" enabled="true"
+					change="onSelectInvoiceApprover" showSecondaryValues="true"
+					items="{ path: 'InvoiceapproversModel>/invoiceapprovers', sorter: { path: 'FirstName' }, length: '10000' }">
+					<core:ListItem key="{InvoiceapproversModel>Zwfdomain1}" text="{InvoiceapproversModel>FirstName} {InvoiceapproversModel>SecondName}"
+						additionalText="{InvoiceapproversModel>Zwfrole1}"/>
+				</Select>
+				<Label text="Actual Budget Status"/>
+				<t:Table id="changeSupplementTable" selectionMode="None" visibleRowCount="2" threshold="15" enableBusyIndicator="true"
+					ariaLabelledBy="FiscalYear">
+					<t:columns>
+						<t:Column width="100%">
+							<Label text="Fiscal Year"/>
+							<t:template>
+								<Text text="{FiscalYear}" wrapping="false"/>
+							</t:template>
+						</t:Column>
+						<t:Column width="100%">
+							<Label text="Plan Vers.0"/>
+							<t:template>
+								<Text textAlign="Right" text="{PlanVersion0} {Currency}"/>
+								<Text textAlign="Right" text="{path: 'PlanVersion0', formatter: '.formatter.In_en_DE_WithCurrency'} {Currency}"/>
+								<!--	<Text text="{PlanVersion0}" wrapping="false" />-->
+							</t:template>
+						</t:Column>
+						<t:Column width="100%">
+							<Label text="Plan Vers.1"/>
+							<t:template>
+								<!--<Text textAlign="Right" text="{PlanVersion1} {Currency}"/>-->
+								<Text textAlign="Right" text="{path: 'PlanVersion1', formatter: '.formatter.In_en_DE_WithCurrency'} {Currency}"/>
+								<!--	<Text text="{PlanVersion1}" wrapping="false" />-->
+							</t:template>
+						</t:Column>
+						<t:Column width="100%">
+							<Label text="Budget"/>
+							<t:template>
+								<!--<Text textAlign="Right" text="{Budget} {Currency}"/>-->
+								<Text textAlign="Right" text="{path: 'Budget', formatter: '.formatter.In_en_DE_WithCurrency'} {Currency}"/>
+								<!--<Text text="{Budget}" wrapping="false" />-->
+							</t:template>
+						</t:Column>
+						<t:Column width="100%">
+							<Label text="Allotted"/>
+							<t:template>
+								<!--<Text textAlign="Right" text="{Allotted} {Currency}"/>-->
+								<Text textAlign="Right" text="{path: 'Allotted', formatter: '.formatter.In_en_DE_WithCurrency'} {Currency}"/>
+								<!--	<Text text="{Allotted}" wrapping="false" />-->
+							</t:template>
+						</t:Column>
+						<t:Column width="100%">
+							<Label text="Available BDG"/>
+							<t:template>
+								<!--<Text textAlign="Right" text="{Available} {Currency}"/>-->
+								<Text textAlign="Right" text="{path: 'Available', formatter: '.formatter.In_en_DE_WithCurrency'} {Currency}"/>
+								<!-- <Text text="{Available}" wrapping="false" /> -->
+							</t:template>
+						</t:Column>
+					</t:columns>
+				</t:Table>
+				<core:Title text="Select Approvers"/>
+				<FlexBox height="100px" alignItems="Start" justifyContent="End">
+					<items>
+						<Button id="showQuickView" tooltip="Budget info" class="sapUiTinyMarginBottom" icon="sap-icon://hint" press="onOpenInfo"/>
+						<Button id="clearApproverSelection" class="sapUiTinyMarginBottom" text="Clear Appr. Selection" press="onClearApproverSelection"/>
+					</items>
+				</FlexBox>
+				<Label text="PJM" required="false" visible="true"/>
+				<!-- started by mrithul 7/1/2022 -->
+				<Select id="pjmComboBox" selectedKey="{pur>/approverpjm}" forceSelection="false" enabled="true" visible="true" change="onSelectPjm"
+					items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'PJM' }, length: '10000' }">
+					<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+				</Select>
+				<!-- ended by mrithul 7/1/2022 -->
+				<!--<Label text="HOD" required="false" visible="{fieldEnable>/NONPJM}"/>-->
+				<Label text="HOD / Associate Director" visible="true" required="false"/>
+				<!--added on feb2022-->
+				<Select id="hodComboBox" selectedKey="{pur>/approverhod}" forceSelection="false" enabled="true" visible="true" change="onSelectHod"
+					items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'HOD' }, length: '10000' }">
+					<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+				</Select>
+				<!--<Label text="Director" required="false" visible="{fieldEnable>/NONPJM}"/>-->
+				<Label text="Director / Associate VP" visible="true" required="false"/>
+				<!--added on feb2022-->
+				<Select id="directorComboBox" selectedKey="{pur>/approverdirector}" forceSelection="false" enabled="true" visible="true"
+					change="onSelectDirector"
+					items="{ path: 'approvers>/approvers', filters: { path : 'Zwfrole1', operator : 'EQ', value1 : 'DIRECTOR' }, sorter: { path: 'FirstName' }, length: '10000' }">
+					<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+				</Select>
+				<Label text="VP" required="false" visible="true"/>
+				<Select id="vpComboBox" selectedKey="{pur>/approvervp}" forceSelection="false" enabled="true" visible="true" change="onSelectVp"
+					items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'VP' }, length: '10000' }">
+					<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+				</Select>
+				<Label text="CFO" required="false" visible="true"/>
+				<Select id="cfoComboBox" selectedKey="{pur>/approvercfo}" forceSelection="false" enabled="true" visible="true" change="onSelectCfo"
+					items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'CFO' }, length: '10000' }">
+					<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+				</Select>
+				<Label text="MD1" required="false" visible="true"/>
+				<Select id="md1ComboBox" selectedKey="{pur>/approvermd1}" forceSelection="false" enabled="true" visible="true" change="onSelectMd1"
+					items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'MD' }, length: '10000' }">
+					<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+				</Select>
+				<Label text="MD2" required="false" visible="true"/>
+				<Select id="md2ComboBox" selectedKey="{pur>/approvermd2}" forceSelection="false" enabled="true" visible="true" change="onSelectMd2"
+					items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'MD' }, length: '10000' }">
+					<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+				</Select>
+				<Label text="CEO" required="false" visible="true"/>
+				<Select id="ceoComboBox" selectedKey="{pur>/approverceo}" forceSelection="false" enabled="true" visible="true" change="onSelectCeo"
+					items="{ path: 'approvers>/approvers', sorter: { path: 'FirstName' }, filters: { path: 'Zwfrole1', operator: 'EQ', value1: 'CEO' }, length: '10000' }">
+					<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>FirstName} {approvers>SecondName}" additionalText="{approvers>SecondName}"/>
+				</Select>
+				<!--		<Label text="Invoice Approver (if deviating from approver)" required="false"/>
+			<Select
+				id="invoiceApproverComboBox"
+				selectedKey="{pur>/approverinvoice}"
+				forceSelection="false"
+				enabled="false"
+				change="onSelectCeo"
+				items="{
+					path: 'approvers>/approvers',
+					sorter: { path: 'FirstName' },
+				}">
+				<core:ListItem key="{approvers>Zwfdomain1}" text="{approvers>SecondName}, {approvers>FirstName}"/>
+			</Select>
+-->
+				<Label text="Attachments" required="false"/>
+				<UploadCollection id="UploadCollection" multiple="false" uploadEnabled="true"
+					items="{path : 'filebucketservice>/_TODO_/Files', model: 'filebucketservice',templateShareable : 'true'}"
+					uploadUrl="/filebucketservice/upload" numberOfAttachmentsText=" " fileDeleted="onFileDelete" beforeUploadStarts="onBeforeUploadStarts"
+					uploadComplete="onUploadComplete">
+					<items>
+						<UploadCollectionItem documentId="{filebucketservice>Id}" visibleEdit="false" fileName="{filebucketservice>Name}"
+							mimeType="{filebucketservice>MimeType}" thumbnailUrl="{filebucketservice>thumbnailUrl}"
+							url="https://cerrepoaccessbi0brchgc3.eu2.hana.ondemand.com/FileBucketProvider/get?id={filebucketservice>Id}">
+							<!-- tw72h2gxnz bi0brchgc3 -->
+							<attributes>
+								<ObjectAttribute title="{title}" text="{text}" active="{active}"/>
+							</attributes>
+							<statuses>
+								<ObjectStatus title="{title}" text="{text}" state="{state}"/>
+							</statuses>
+						</UploadCollectionItem>
+					</items>
+				</UploadCollection>
+				<!--<FlexBox height="100px" alignItems="Start" justifyContent="End">-->
+				<!--	<items>-->
+				<!--	</items>-->
+				<!--</FlexBox>-->
+				<!--<VBox>-->
+				    <Label text=""/>
+					<Button id="showQuickViewAB"  tooltip="Additional info" class="sapUiTinyMarginBottom" icon="sap-icon://hint" press="onAddOpenInfo">
+					<layoutData> <layout:GridData span="L1 M1 S6" indent="L11 M11 S6"/> </layoutData>
+					</Button>
+					<Label id="idSAB" text="Selected approved BR" required="false" visible="false"/>
+					<Link text="{pur>/bRTitle}" id="idSB" press="onClickofBReq" wrapping="true" visible="false"/>
+					<Label id="idLAB" text="List of already approved BR" required="false" visible="true"/>
+					<Button id="idSBL" text="Budget List" press="_onBudgetListPress" visible="true"/>
+				<!--</VBox>-->
+			</f:SimpleForm>
+			<footer>
+				<OverflowToolbar id="otbFooter">
+					<ToolbarSpacer/>
+					<Button id="btnStartRequest" type="Accept" text="Submit Purchase Request" press="onStartWorkflow" enabled="false">
+						<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+					</Button>
+				</OverflowToolbar>
+			</footer>
+		</Page>
+	</App>
+</mvc:View>

@@ -1,0 +1,158 @@
+{
+    "_version": "1.8.0",
+    "sap.app": {
+        "id": "gb.wf.cer.purchase.init",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "sourceTemplate": {
+            "id": "servicecatalog.connectivityComponentForManifest",
+            "version": "0.0.0",
+            "toolsId": "d6b5190c-cc46-4c33-8878-8d03c538ae13"
+        },
+        "dataSources": {
+            "Z_WORKFLOW_SRV": {
+                "uri": "/sap/opu/odata/sap/Z_WORKFLOW_SRV/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "filebucketservice": {
+                "uri": "/filebucketservice/odata.svc/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "ZGB_CDS_WF_RANGE_CDS": {
+                "uri": "/sap/opu/odata/sap/ZGB_CDS_WF_RANGE_CDS/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "ZGB_CDS_WF_APPROVAL_CDS": {
+                "uri": "/sap/opu/odata/sap/ZGB_CDS_WF_APPROVAL_CDS/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "ZWORKFLOWSTS_SRV": {
+                "uri": "/sap/opu/odata/sap/ZWORKFLOWSTS_SRV/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/ZWORKFLOWSTS_SRV/metadata.xml"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        },
+        "supportedThemes": [
+            "sap_hcb",
+            "sap_belize"
+        ]
+    },
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "gb.wf.cer.purchase.init.view.InitPurchaseWorkflow",
+            "type": "XML"
+        },
+        "dependencies": {
+            "minUI5Version": "1.60.1",
+            "libs": {
+                "sap.ui.layout": {},
+                "sap.ui.core": {},
+                "sap.m": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "gb.wf.cer.purchase.init.i18n.i18n"
+                }
+            },
+            "": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "defaultOperationMode": "Server",
+                    "defaultBindingMode": "OneWay",
+                    "defaultCountMode": "Request"
+                },
+                "dataSource": "Z_WORKFLOW_SRV",
+                "preload": true
+            },
+            "filebucketservice": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "useBatch": false,
+                    "defaultOperationMode": "Server",
+                    "defaultBindingMode": "OneWay",
+                    "defaultCountMode": "Request"
+                },
+                "dataSource": "filebucketservice",
+                "preload": true
+            },
+            "range": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "useBatch": false,
+                    "defaultOperationMode": "Server",
+                    "defaultBindingMode": "OneWay",
+                    "defaultCountMode": "Request"
+                },
+                "dataSource": "ZGB_CDS_WF_RANGE_CDS",
+                "preload": true
+            },
+            "approval": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "useBatch": false,
+                    "defaultOperationMode": "Server",
+                    "defaultBindingMode": "OneWay",
+                    "defaultCountMode": "Request"
+                },
+                "dataSource": "ZGB_CDS_WF_APPROVAL_CDS",
+                "preload": true
+            },
+            "WStatusModel": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "defaultOperationMode": "Server",
+                    "defaultBindingMode": "OneWay",
+                    "defaultCountMode": "Request"
+                },
+                "dataSource": "ZWORKFLOWSTS_SRV",
+                "preload": true
+            }
+        }
+    },
+    "sap.platform.hcp": {
+        "uri": "",
+        "_version": "1.1.0"
+    }
+}

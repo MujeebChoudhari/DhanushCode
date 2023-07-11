@@ -1,0 +1,48 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<TableSelectDialog id="myDialog" noDataText="No Requests are currently available" title="Approved Budget Requests" search=".handleSearch"
+		confirm=".handleClose" cancel=".handleClose" contentWidth="100%" items="{ path : 'bugetModel>/', sorter :{ path : 'ReqDt', descending
+ : true }}">
+		<ColumnListItem vAlign="Middle">
+			<cells>
+				<ObjectIdentifier title="{bugetModel>Short_Text}"/>
+				<Text text="{path : 'bugetModel>ReqDt',  formatter:'.formatter.tabeDate'}"/>
+				<Text text="{bugetModel>ReqBy}"/>
+				<Link text="{bugetModel>ReqId}" press="onClickofReq" wrapping="true"/>
+				<Text text="{ path: 'bugetModel>ReqBudYr1', formatter: '.formatter.In_en_DE_WithCurrency' } {bugetModel>Zcurr}"/>
+				<Text text="{ path: 'bugetModel>ReqBudYr2', formatter: '.formatter.In_en_DE_WithCurrency' } {bugetModel>Zcurr}"/>
+			</cells>
+		</ColumnListItem>
+		<columns>
+			<Column width="10rem">
+				<header>
+					<Text text="Title"/>
+				</header>
+			</Column>
+			<Column hAlign="Center">
+				<header>
+					<Text text="Request Date"/>
+				</header>
+			</Column>
+			<Column hAlign="Center" width="13rem">
+				<header>
+					<Text text="Requester"/>
+				</header>
+			</Column>
+			<Column hAlign="Center" width="20rem">
+				<header>
+					<Text text="Budget Request No"/>
+				</header>
+			</Column>
+			<Column hAlign="End">
+				<header>
+					<Text text="Current Year"/>
+				</header>
+			</Column>
+			<Column hAlign="End">
+				<header>
+					<Text text="Next Year"/>
+				</header>
+			</Column>
+		</columns>
+	</TableSelectDialog>
+</core:FragmentDefinition>

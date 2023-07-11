@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<TableSelectDialog noDataText="No items found" title="Select GLAccount" search="handleSearchGLAccount" confirm="handleConfirmGLAccount" cancel="handleConfirmGLAccount"
+		items="{ path : 'account>/accounts',
+				sorter : { path : 'AccountNumber', ascending : true }}">
+			<ColumnListItem>
+			<cells>
+				<Text text="{account>LongText}" />
+				<Text text="{account>AccountNumber}" />
+				
+			</cells>
+		</ColumnListItem>
+		<columns>
+			
+			<Column width="12em">
+				<header>
+					<Text text="Description"/>
+				</header>
+			</Column>
+			<Column width="12em" minScreenWidth="Tablet" demandPopin="true">
+				<header>
+					<Text text="Account"/>
+				</header>
+			</Column>
+		</columns>
+	</TableSelectDialog>
+</core:FragmentDefinition>

@@ -1,0 +1,32 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form">
+	<Popover
+		id="infoFragmentUSD"
+		class="sapUiContentPadding"
+		placement="Top">
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button
+					id="closeFragmentUSD"
+					text="Close"
+					press="onCloseInfoUSD" />
+			</Toolbar>
+		</footer>
+		<l:VerticalLayout
+			class="sapUiContentPadding"
+			width="100%">
+			<l:content>
+				<!--<core:HTML content="&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;0 &lt;= CER &lt; 2500&lt;/td&gt;&lt;td&gt;HOD&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;2500 &lt;= CER &lt; 10000&lt;/td&gt;&lt;td&gt;DIRECTOR&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;10000 &lt;= CER &lt; 25000&lt;/td&gt;&lt;td&gt;VP&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;25000 &lt; CER &lt; 50000&lt;/td&gt;&lt;td&gt;CFO and 1x MD&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;50000 &lt;= CER &lt; 200000&lt;/td&gt;&lt;td&gt;CFO, 1x MD and 2x MD&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;200000 &lt;= CER&lt;/td&gt;&lt;td&gt;CFO and CEO&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;">-->
+				<!--</core:HTML>-->
+				<core:HTML content="&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt; 2,500$&lt;/td&gt;&lt;td&gt; - Head of Department (HOD) / Associate Director&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt; 10,000$&lt;/td&gt;&lt;td&gt; - Director / Associate VP&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt; 25,000$&lt;/td&gt;&lt;td&gt; - Vice President (VP)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt; 50,000$&lt;/td&gt;&lt;td&gt; - Managing Director (MD) and Chief Financial Officer (CFO)&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;&lt; 200,000$&lt;/td&gt;&lt;td&gt; - 2 Managing Directors (MD) and Chief Financial Officer (CFO)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; &gt;= 200,000$&lt;/td&gt;&lt;td&gt; - CEO GB Group (CEO) and Chief Financial Officer (CFO)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;"> <!--changed by Deeksha 02/11/2021-->
+				</core:HTML>
+				<!--<core:HTML content="&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt; = 50 EUR&lt;/td&gt;&lt;td&gt;no additional approval needed&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;50 &lt; CER &lt; 2500&lt;/td&gt;&lt;td&gt;HOD&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;2500 &lt;= CER &lt; 10000&lt;/td&gt;&lt;td&gt;HOD and DIRECTOR&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;10000 &lt;= CER &lt;= 25000&lt;/td&gt;&lt;td&gt;HOD, DIRECTOR and VP&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;25000 &lt; CER &lt; 50000&lt;/td&gt;&lt;td&gt;HOD, DIRECTOR, VP, CFO and 1x MD&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;50000 &lt;= CER &lt; 200000&lt;/td&gt;&lt;td&gt;HOD, DIRECTOR, VP, CFO and 2x MD&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;200000 &lt;= CER&lt;/td&gt;&lt;td&gt;HOD, DIRECTOR, VP, CFO, 2x MD and CEO&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;">-->
+				<!--</core:HTML>-->
+			</l:content>
+		</l:VerticalLayout>
+	</Popover>
+</core:FragmentDefinition>

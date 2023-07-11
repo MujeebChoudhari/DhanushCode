@@ -1,0 +1,57 @@
+{
+  "welcomeFile": "/index.html",
+  "routes": [
+    {
+      "path": "/resources",
+      "target": {
+        "type": "service",
+        "name": "sapui5",
+        "entryPath": "/resources"
+      },
+      "description": "SAPUI5 Resources"
+    },
+    {
+      "path": "/test-resources",
+      "target": {
+        "type": "service",
+        "name": "sapui5",
+        "entryPath": "/test-resources"
+      },
+      "description": "SAPUI5 Test Resources"
+    },
+    {
+      "path": "bpmworkflowruntime",
+      "target": {
+        "type": "destination",
+        "name": "bpmworkflowruntime",
+        "entryPath": "/workflow-service"
+      },
+      "description": "Workflow Service Runtime"
+    },
+    {
+      "path": "/filebucketservice",
+      "target": {
+        "type": "destination",
+        "name": "filebucketservice",
+        "entryPath": "/"
+      },
+      "description": "filebucketservice"
+    },
+    {
+      "path": "/sap/opu/odata",
+      "target": {
+        "type": "destination",
+        "name": "GBP",
+        "entryPath": "/sap/opu/odata"
+      },
+      "description": "workflow services on GBP"
+    }, {
+      "path": "/services/userapi",
+      "target": {
+        "type": "service",
+        "name": "userapi"
+      }
+    }
+  ],
+  "sendWelcomeFileRedirect": true
+}

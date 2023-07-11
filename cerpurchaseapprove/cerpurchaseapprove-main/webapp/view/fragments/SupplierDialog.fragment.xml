@@ -1,0 +1,23 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<TableSelectDialog noDataText="No entries found" title="Select Supplier" search="handleSearchSupplier" confirm="handleConfirmSupplier" cancel="handleConfirmSupplier"
+		items="{ path : 'supplier>/suppliers', sorter : { path : 'Name1', ascending : true } }">
+			<ColumnListItem>
+			<cells>
+				<Text text="{supplier>Name1}" />
+				<Text text="{supplier>Vendor}" />
+			</cells>
+		</ColumnListItem>
+		<columns>
+			<Column width="12em">
+				<header>
+					<Text text="Name"/>
+				</header>
+			</Column>
+			<Column width="12em" demandPopin="true">
+				<header>
+					<Text text="Supplier"/>
+				</header>
+			</Column>
+		</columns>
+	</TableSelectDialog>
+</core:FragmentDefinition>
